@@ -3,7 +3,11 @@
 
 # \<proplanr-repeat\>
 
-Element providing repeating action similiar to Google Calendar Repeat.. Event.
+Element providing repeating action similar to Google Calendar Repeat.. Event.
+
+## Install
+
+    bower install --save proplanr-repeat
 
 ## Install the Polymer-CLI
 
