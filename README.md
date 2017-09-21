@@ -5,6 +5,12 @@
 
 Element providing repeating action similar to Google Calendar Repeat.. Event.
 
+## Demo and API docs
+If your are viewing this from webcomponents.org, use the below links for API and demos, not the links on right sidebar.
+
+- [API docs](https://proplanr.github.io/proplanr-repeat/#proplanr-repeat)
+- [Demo](https://proplanr.github.io/proplanr-repeat/components/proplanr-repeat/demo/)
+
 ## Install
 
     bower install --save proplanr-repeat
