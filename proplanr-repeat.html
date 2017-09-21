@@ -1,0 +1,54 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+
+Element providing repeating action similiar to Google Calendar Repeat.. Event.
+
+    <proplanr-repeat></proplanr-repeat>
+
+### Styling
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--proplanr-repeat-height` | Custom height for element    | `auto`
+
+### Install
+
+    bower install --save proplanr-repeat
+
+@group ProPlanr Elements
+@element proplanr-repeat
+@demo demo/index.html
+-->
+
+<dom-module id="proplanr-repeat">
+  <template>
+    <style>
+      :host {
+        display: block;
+        --calculated-proplanr-repeat-height: var(--proplanr-repeat-height, auto);
+      }
+    </style>
+    <h2>ProPlanr-repeat default: [[repeats]]!</h2>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'proplanr-repeat',
+
+      properties: {
+
+        /**
+          * Repeats options: (Daily, Weekly, Monthly, Quarterly, Yearly.
+        */
+        repeats: {
+          type: String,
+          value: 'Daily',
+          notify: true
+        },
+      }
+    });
+  </script>
+</dom-module>
