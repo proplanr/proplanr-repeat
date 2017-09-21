@@ -1,5 +1,5 @@
-<!-- [![Build status](https://travis-ci.org/ProPlanr/proplanr-repeat.svg?branch=master)](https://travis-ci.org/ProPlanr/proplanr-repeat)
-[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/ProPlanr/proplanr-repeat) -->
+[![Build status](https://travis-ci.org/ProPlanr/proplanr-repeat.svg?branch=master)](https://travis-ci.org/proplanr/proplanr-repeat)
+<!-- [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/ProPlanr/proplanr-repeat) -->
 
 # \<proplanr-repeat\>
 
