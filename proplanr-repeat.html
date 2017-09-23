@@ -1,5 +1,11 @@
 <link rel="import" href="../polymer/polymer.html">
-
+<link rel="import" href="../iron-component-page/iron-component-page.html">
+<link rel="import" href="iron-form/iron-form.html">
+<link rel="import" href="paper-input/paper-input.html">
+<link rel="import" href="paper-button/paper-button.html">
+<link rel="import" href="paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="paper-menu/paper-menu.html">
+<link rel="import" href="paper-item/paper-item.html">
 <!--
 
 Element providing repeating action similiar to Google Calendar Repeat.. Event.
@@ -24,7 +30,7 @@ Custom property | Description | Default
 -->
 
 <dom-module id="proplanr-repeat">
-  <template>
+    <template>
     <style>
       :host {
         display: block;
@@ -32,23 +38,39 @@ Custom property | Description | Default
       }
     </style>
     <h2>ProPlanr-repeat default: [[repeats]]!</h2>
+    <iron-form>
+      <form method="get" action="/form/handler">
+        <paper-dropdown-menu label="Repeat" name="repeatType" required>
+          <paper-listbox class="dropdown-content" slot="dropdown-content">
+            <paper-item value="daily">Daily</paper-item>
+            <paper-item value="weekly">Weekly</paper-item>
+            <paper-item value="monthly">Monthly</paper-item>
+            <paper-item value="quarterly">Quarterly</paper-item>
+            <paper-item value="yearly">Yearly</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        <input type="text" name="every" label="Repeate Every"><span value$={{repeatType}}></span>
+        <input type="checkbox" name="donuts" checked> I like donuts<br>
+        <paper-checkbox name="cheese" value="yes" checked></paper-checkbox>
+      </form>
+    </iron-form>
   </template>
 
-  <script>
-    Polymer({
-      is: 'proplanr-repeat',
+    <script>
+        Polymer({
+            is: 'proplanr-repeat',
 
-      properties: {
+            properties: {
 
-        /**
-          * Repeats options: (Daily, Weekly, Monthly, Quarterly, Yearly.
-        */
-        repeats: {
-          type: String,
-          value: 'Daily',
-          notify: true
-        },
-      }
-    });
-  </script>
+                /**
+                 * Repeats options: (Daily, Weekly, Monthly, Quarterly, Yearly.
+                 */
+                repeats: {
+                    type: String,
+                    value: 'Daily',
+                    notify: true
+                },
+            }
+        });
+    </script>
 </dom-module>
