@@ -38,22 +38,28 @@ Custom property | Description | Default
         display: block;
         --calculated-proplanr-repeat-height: var(--proplanr-repeat-height, auto);
       }
+      
+      #oftenRepeat {
+        width: 20px;
+      }
     </style>
     <h2>ProPlanr-repeat default: [[repeats]]!</h2>
     <iron-form>
       <form method="get" action="/form/handler">
-        <paper-dropdown-menu label="Repeat" name="repeatType" required>
+        <paper-dropdown-menu label="Repeat" required bind-value="{{bindValue}}" onclick="repeatType.bindValue='value'">
           <paper-listbox class="dropdown-content" slot="dropdown-content">
-            <paper-item value="daily">Daily</paper-item>
-            <paper-item value="weekly">Weekly</paper-item>
-            <paper-item value="monthly">Monthly</paper-item>
-            <paper-item value="quarterly">Quarterly</paper-item>
-            <paper-item value="yearly">Yearly</paper-item>
+            <paper-item value="days">Daily</paper-item>
+            <paper-item value="weeks">Weekly</paper-item>
+            <paper-item value="months">Monthly</paper-item>
+            <paper-item value="quarters">Quarterly</paper-item>
+            <paper-item value="years">Yearly</paper-item>
           </paper-listbox>
         </paper-dropdown-menu>
-        <input type="text" name="every" label="Repeate Every"><span value$={{"repeatType"}}></span>
-        <input type="checkbox" name="donuts" checked> I like donuts<br>
-        <paper-checkbox name="cheese" value="yes" checked></paper-checkbox>
+      </br>
+        Repeat Every <iron-input allowed-pattern="[0-9]"><input pattern="\d{5}" id="oftenRepeat"></iron-input><span id="repeatType"><code></code> {{bindValue}}</span>
+    </br>
+    </br>
+        Start On <iron-input><input placeholder="type=date" type="date"></iron-input>
       </form>
     </iron-form>
   </template>
