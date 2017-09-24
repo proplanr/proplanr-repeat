@@ -39,7 +39,7 @@ Custom property | Description | Default
         --calculated-proplanr-repeat-height: var(--proplanr-repeat-height, auto);
       }
       
-      #oftenRepeat {
+      .number {
         width: 20px;
       }
     </style>
@@ -56,10 +56,17 @@ Custom property | Description | Default
           </paper-listbox>
         </paper-dropdown-menu>
       </br>
-        Repeat Every <iron-input allowed-pattern="[0-9]"><input pattern="\d{5}" id="oftenRepeat"></iron-input><span id="repeatType"><code></code> {{bindValue}}</span>
-    </br>
-    </br>
-        Start On <iron-input><input placeholder="type=date" type="date"></iron-input>
+        <p>Repeat Every: <iron-input allowed-pattern="[0-9]"><input pattern="\d{5}" id="oftenRepeat" class="number"></iron-input><span id="repeatType"> {{bindValue}}</span></p>
+    
+        <p>Start On: <iron-input><input placeholder="type=date" type="date"></iron-input></p>
+    
+        <p>Ends: </p>
+        <paper-checkbox name="never">Never</paper-checkbox><br>
+  </br>
+        <paper-checkbox name="after">After <iron-input allowed-pattern="[0-9]"><input pattern="\d{5}" class="number"></iron-input> ocurrences</paper-checkbox><br>
+       </br> 
+        <paper-checkbox name="on"></paper-checkbox>On <iron-input>
+          <input placeholder="type=date" type="date"></iron-input></paper-checkbox>
       </form>
     </iron-form>
   </template>
