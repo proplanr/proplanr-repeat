@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-component-page/iron-component-page.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../iron-form/iron-form.html">
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../paper-button/paper-button.html">
@@ -8,31 +9,35 @@
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-listbox/paper-listbox.html">
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
+
+<!-- <link rel="import" href="../vaadin-date-picker/vaadin-date-picker.html"> -->
 <!--
-
-Element providing repeating action similiar to Google Calendar Repeat.. Event.
-
-    <proplanr-repeat></proplanr-repeat>
-
-### Styling
-
-The following custom properties and mixins are available for styling:
-
-Custom property | Description | Default
-----------------|-------------|----------
-`--proplanr-repeat-height` | Custom height for element    | `auto`
-
-### Install
-
-    bower install --save proplanr-repeat
-
-@group ProPlanr Elements
-@element proplanr-repeat
-@demo demo/index.html
+  
+  Element providing repeating action similiar to Google Calendar Repeat.. Event.
+  
+  <proplanr-repeat></proplanr-repeat>
+  
+  ### Styling
+  
+  The following custom properties and mixins are available for styling:
+  
+  Custom property | Description | Default
+  ----------------|-------------|----------
+  `--proplanr-repeat-height` | Custom height for element    | `auto`
+  
+  ### Install
+  
+  bower install --save proplanr-repeat
+  
+  @group ProPlanr Elements
+  @element proplanr-repeat
+  @demo demo/index.html
 -->
 
 <dom-module id="proplanr-repeat">
-    <template>
+  <template>
+    <style include="iron-flex iron-flex-alignment iron-flex-factors iron-positioning"></style>      
+    
     <style>
       :host {
         display: block;
@@ -46,8 +51,8 @@ Custom property | Description | Default
     <h2>ProPlanr-repeat default: [[repeats]]!</h2>
     <iron-form>
       <form method="get" action="/form/handler">
-        <paper-dropdown-menu label="Repeat" required bind-value="{{bindValue}}" onclick="repeatType.bindValue='value'">
-          <paper-listbox class="dropdown-content" slot="dropdown-content">
+        <paper-dropdown-menu label="Repeat">
+          <paper-listbox class="dropdown-content" slot="dropdown-content" selected="{{repeatFrequence}}" attr-for-selected="value">
             <paper-item value="days">Daily</paper-item>
             <paper-item value="weeks">Weekly</paper-item>
             <paper-item value="months">Monthly</paper-item>
@@ -56,36 +61,70 @@ Custom property | Description | Default
           </paper-listbox>
         </paper-dropdown-menu>
       </br>
-        <p>Repeat Every: <iron-input allowed-pattern="[0-9]"><input pattern="\d{5}" id="oftenRepeat" class="number"></iron-input><span id="repeatType"> {{bindValue}}</span></p>
-    
-        <p>Start On: <iron-input><input placeholder="type=date" type="date"></iron-input></p>
-    
-        <p>Ends: </p>
-        <paper-checkbox name="never">Never</paper-checkbox><br>
-  </br>
-        <paper-checkbox name="after">After <iron-input allowed-pattern="[0-9]"><input pattern="\d{5}" class="number"></iron-input> ocurrences</paper-checkbox><br>
-       </br> 
+
+        <p>Repeat Every: <iron-input allowed-pattern="[0-9]" type="Number"><input pattern="\d{5}" id="oftenRepeat" class="number"></iron-input><span id="repeatType"> {{repeatFrequence}}</span></p>
+        
+        <div class="layout horizontal center wrap">
+          Repeat Every:
+          <paper-input class="number" value="{{repeatEvery}}" type="number" no-float></paper-input> 
+          {{repeatFrequence}}
+        </div>
+          
+          <p>Start On: <iron-input><input placeholder="type=date" type="date"></iron-input></p>
+
+          <!-- <vaadin-date-picker label="Start On:">{{selectedStartOne}}</vaadin-date-picker> -->
+          
+          <p>Ends: </p>
+          <paper-checkbox name="never">Never</paper-checkbox><br>
+        <!-- </br> -->
+        <paper-checkbox name="after" checked="{{repeatAfter}}">After <iron-input allowed-pattern="[0-9]"><input pattern="\d{5}" class="number"></iron-input> ocurrences</paper-checkbox><br>
         <paper-checkbox name="on"></paper-checkbox>On <iron-input>
-          <input placeholder="type=date" type="date"></iron-input></paper-checkbox>
-      </form>
-    </iron-form>
-  </template>
+        <input placeholder="type=date" type="date"></iron-input></paper-checkbox>
 
-    <script>
-        Polymer({
-            is: 'proplanr-repeat',
+        </br> 
+      <paper-button on-click="cancelRepeat">Cancel</paper-button>
+      <paper-button raised on-click="saveRepeat">Save</paper-button>
+    </form>
+  </iron-form>
+</template>
 
-            properties: {
+<script>
+  Polymer({
+    is: 'proplanr-repeat',
+    
+    properties: {
+      
+      /**
+      * Repeats options: (Daily, Weekly, Monthly, Quarterly, Yearly.
+      */
+      repeatFrequence: {
+        type: String,
+        value: 'days',
+        notify: true
+      },
+      repeatEvery: {
+        type: Number,
+        notify: true
+      }
+      
+    },
 
-                /**
-                 * Repeats options: (Daily, Weekly, Monthly, Quarterly, Yearly.
-                 */
-                repeats: {
-                    type: String,
-                    value: 'Daily',
-                    notify: true
-                },
-            }
-        });
-    </script>
+    saveRepeat: function(event) {
+      console.log('saveRepeat',event,this.repeatFrequence);
+
+    },
+
+    cancelRepeat: function(event) {
+      console.log('cancelRepeat');
+      this.resetRepeatForm();
+    },
+
+    resetRepeatForm: function(event) {
+      console.log('resetRepeatForm:',event);
+      this.repeatFrequence = '';
+      this.repeatEvery = ''
+
+    },
+  });
+</script>
 </dom-module>
