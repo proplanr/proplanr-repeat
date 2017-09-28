@@ -9,6 +9,8 @@
 <link rel="import" href="../paper-listbox/paper-listbox.html">
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+
 <!--
 
 Element providing repeating action similiar to Google Calendar Repeat.. Event.
@@ -34,21 +36,25 @@ Custom property | Description | Default
 
 <dom-module id="proplanr-repeat">
     <template>
-    <style>
+    <style include="iron-flex iron-flex-alignment">
       :host {
         display: block;
         --calculated-proplanr-repeat-height: var(--proplanr-repeat-height, auto);
       }
       
       .number {
-        width: 50px;
+        width: 40px;
+      }
+
+      .label {
+        padding-right: 5px;
       }
     </style>
     <h2>ProPlanr-repeat default: [[repeats]]!</h2>
     <iron-form>
       <form method="get" action="/form/handler">
-        <paper-dropdown-menu label="Repeat" required bind-value="{{bindValue}}" onclick="repeatType.bindValue='value'">
-          <paper-listbox class="dropdown-content" slot="dropdown-content" selected="{{repeatFrequency}}"  attr-for-selected="value">
+        <paper-dropdown-menu label="Repeat" required bind-value="{{bindValue}}" onclick="repeatFrequence.bindValue='value'">
+          <paper-listbox class="dropdown-content" slot="dropdown-content" selected="{{repeatFrequence}}"  attr-for-selected="value">
             <paper-item value="days">Daily</paper-item>
             <paper-item value="weeks">Weekly</paper-item>
             <paper-item value="months">Monthly</paper-item>
@@ -58,26 +64,31 @@ Custom property | Description | Default
         </paper-dropdown-menu>
       
       <div class="layout horizontal center wrap">
-        <p>Repeat Every: </p><paper-input class="number" value="{{repeatEvery}}" type="number" no-float></paper-input> {{repeatFrequence}}
+        <p class="label">Repeat Every: </p><paper-input class="number" value="{{repeatEvery}}" type="number" no-float></paper-input> 
+        {{repeatFrequence}}
         </div>
 
-        <div class="layout horizontal wrap">
-          Start On: <vaadin-date-picker></vaadin-date-picker>
+        <div class="layout horizontal center wrap">
+          <p class="label">Start On:</p><vaadin-date-picker></vaadin-date-picker>
         </div>
         
         
-          <p>Ends: </p>
+          <p class="label">Ends: </p>
           <paper-checkbox name="never">Never</paper-checkbox>
-          <br>
-          <br>
+         
           <div class="layout horizontal center wrap">
-            <paper-checkbox name="after"></paper-checkbox>After: <paper-input class="number" type="number"></paper-input><p> ocurrences</p>
+            <paper-checkbox name="after"></paper-checkbox><p class="label">After:</p><paper-input class="number" type="number"></paper-input><p class="label"> ocurrences</p>
           </div>
 
           <div class="layout horizontal center wrap">
-            <paper-checkbox name="on"></paper-checkbox>On <vaadin-date-picker></vaadin-date-picker>
+            <paper-checkbox name="on"></paper-checkbox><p class="label">On:</p> <vaadin-date-picker></vaadin-date-picker>
           </div>
         
+          <div class="layout horizontal center wrap">
+          <paper-button raised on-click="cancelRepeat">Cancel</paper-button>
+          <paper-button raised on-click="saveRepeat">Save</paper-button>
+          <paper-button raised on-click="resetRepeatForm">Reset</paper-button>
+          </div>
       </form>
     </iron-form>
   </template>
@@ -91,12 +102,33 @@ Custom property | Description | Default
                 /**
                  * Repeats options: (Daily, Weekly, Monthly, Quarterly, Yearly.
                  */
-                repeats: {
+                repeatFrequence: {
                     type: String,
-                    value: 'Daily',
+                    value: 'days',
                     notify: true
                 },
-            }
+
+                repeatEvery: {
+                    type: Number,
+                    notify: true
+                }
+
+            },
+
+            saveRepeat: function(event) {
+                console.log('saveRepeat', event, this.repeatFrequence);
+            },
+
+            cancelRepeat: function(event) {
+                console.log('cancelRepeat');
+                this.resetRepeatForm();
+            },
+
+            resetRepeatForm: function(event) {
+                console.log('resetRepeatForm:', event);
+                this.repeatFrequence = '';
+                this.repeatEvery = ''
+            },
         });
     </script>
 </dom-module>
