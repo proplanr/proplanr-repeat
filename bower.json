@@ -1,63 +1,71 @@
 {
-  "name": "proplanr-repeat",
-  "version": "0.1.0",
-  "description": "Repeating actions element",
-  "main": "proplanr-repeat.html",
-  "authors": [
-    "The ProPlanr Authors"
-  ],
-  "keywords": [
-    "web-components",
-    "polymer",
-    "spinner",
-    "loading"
-  ],
-  "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/ProPlanr/proplanr-repeat"
-  },
-  "license": "http://proplanr.github.io/LICENSE.txt",
-  "homepage": "https://github.com/ProPlanr/proplanr-repeat",
-  "ignore": [],
-  "dependencies": {
-    "paper-styles": "PolymerElements/paper-styles#1 - 2",
-    "polymer": "Polymer/polymer#1.9 - 2",
-    "iron-form": "^2.0.1",
-    "paper-input": "^2.0.2",
-    "paper-button": "^2.0.0",
-    "paper-dropdown-menu": "^2.0.0",
-    "paper-item": "^2.0.0",
-    "paper-listbox": "PolymerElements/paper-listbox#^2.0.0",
-    "paper-checkbox": "^2.0.1",
-    "vaadin-date-picker": "^2.0.5"
-  },
-  "devDependencies": {
-    "iron-component-page": "PolymerElements/iron-component-page#1 - 2",
-    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#1 - 2",
-    "web-component-tester": "^6.0.0",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
-  },
-  "variants": {
-    "1.x": {
-      "dependencies": {
-        "polymer": "Polymer/polymer#^1.9",
-        "paper-styles": "PolymerElements/paper-styles#^1.0.0"
-      },
-      "devDependencies": {
-        "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
-        "paper-styles": "PolymerElements/paper-styles#^1.0.0",
-        "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
-        "test-fixture": "PolymerElements/test-fixture#^1.0.0",
-        "web-component-tester": "^4.0.0",
-        "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
-      },
-      "resolutions": {
-        "webcomponentsjs": "^0.7"
-      }
+    "name": "proplanr-repeat",
+    "version": "0.1.0",
+    "description": "Repeating actions element",
+    "main": "proplanr-repeat.html",
+    "authors": [
+        "The ProPlanr Authors"
+    ],
+    "keywords": [
+        "web-components",
+        "polymer",
+        "spinner",
+        "loading"
+    ],
+    "private": true,
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/ProPlanr/proplanr-repeat"
+    },
+    "license": "http://proplanr.github.io/LICENSE.txt",
+    "homepage": "https://github.com/ProPlanr/proplanr-repeat",
+    "ignore": [],
+    "dependencies": {
+        "paper-styles": "PolymerElements/paper-styles#1 - 2",
+        "polymer": "Polymer/polymer#1.9 - 2",
+        "paper-input": "PolymerElements/paper-input#1 - 2",
+        "paper-button": "PolymerElements/paper-button#1 - 2",
+        "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#1 - 2",
+        "paper-item": "PolymerElements/paper-item#1 - 2",
+        "paper-listbox": "PolymerElements/paper-listbox#1 - 2",
+        "paper-checkbox": "PolymerElements/paper-checkbox#1 - 2",
+        "vaadin-date-picker": "^2.0.5",
+        "iron-form": "PolymerElements/iron-form#1 - 2"
+    },
+    "devDependencies": {
+        "iron-component-page": "PolymerElements/iron-component-page#1 - 2",
+        "iron-demo-helpers": "PolymerElements/iron-demo-helpers#1 - 2",
+        "web-component-tester": "^6.0.0",
+        "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+    },
+    "variants": {
+        "1.x": {
+            "dependencies": {
+                "polymer": "Polymer/polymer#^1.9",
+                "paper-styles": "PolymerElements/paper-styles#^1.0.0",
+                "paper-input": "PolymerElements/paper-input#^1.0.2",
+                "paper-button": "PolymerElements/paper-button#^1.0.0",
+                "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^1.0.0",
+                "paper-item": "PolymerElements/paper-item#^1.0.0",
+                "paper-listbox": "PolymerElements/paper-listbox#^1.0.0",
+                "paper-checkbox": "PolymerElements/paper-checkbox#^1.0.1",
+                "vaadin-date-picker": "^1.0.5",
+                "iron-form": "PolymerElements/iron-form#^1.0.1"
+            },
+            "devDependencies": {
+                "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+                "paper-styles": "PolymerElements/paper-styles#^1.0.0",
+                "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+                "test-fixture": "PolymerElements/test-fixture#^1.0.0",
+                "web-component-tester": "^4.0.0",
+                "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+            },
+            "resolutions": {
+                "webcomponentsjs": "^0.7"
+            }
+        }
+    },
+    "resolutions": {
+        "webcomponentsjs": "^1.0.0"
     }
-  },
-  "resolutions": {
-    "webcomponentsjs": "^1.0.0"
-  }
 }
