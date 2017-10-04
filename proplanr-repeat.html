@@ -65,7 +65,20 @@ Custom property | Description | Default
         margin-top: -4px;
         text-align: center;
       }
+
+      #buttons {
+        float: right;
+      }
+
+      iron-form {
+        margin-bottom: 40px;
+      }
+
+      paper-button {
+        margin: 5px;
+      }
     </style>
+
     <h2>ProPlanr-repeat default: [[repeats]]!</h2>
     <iron-form>
       <form method="get" action="/form/handler">
@@ -100,10 +113,10 @@ Custom property | Description | Default
             <paper-checkbox name="on"></paper-checkbox><p class="label">On:</p> <vaadin-date-picker></vaadin-date-picker>
           </div>
         
-          <div class="layout horizontal center wrap">
-          <paper-button raised on-click="cancelRepeat">Cancel</paper-button>
-          <paper-button raised on-click="saveRepeat">Save</paper-button>
-          <paper-button raised on-click="resetRepeatForm">Reset</paper-button>
+          <div class="layout horizontal center wrap" id="buttons">
+          <paper-button raised on-click="cancelRepeat">CANCEL</paper-button>
+          <paper-button raised on-click="saveRepeat">SAVE</paper-button>
+          <paper-button raised on-click="resetRepeatForm">RESET</paper-button>
           </div>
       </form>
     </iron-form>
