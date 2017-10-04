@@ -9,7 +9,6 @@
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../vaadin-material-theme/vaadin-date-picker.html">
 <link rel="import" href="../vaadin-date-picker/vaadin-date-picker.html">
-
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 
 <!--
@@ -54,7 +53,7 @@ Custom property | Description | Default
     <h2>ProPlanr-repeat default: [[repeats]]!</h2>
     <iron-form>
       <form method="get" action="/form/handler">
-        <paper-dropdown-menu label="Repeat" required bind-value="{{bindValue}}" onclick="repeatFrequence.bindValue='value'">
+        <paper-dropdown-menu label="Repeat">
           <paper-listbox class="dropdown-content" slot="dropdown-content" selected="{{repeatFrequence}}"  attr-for-selected="value">
             <paper-item value="days">Daily</paper-item>
             <paper-item value="weeks">Weekly</paper-item>
