@@ -48,6 +48,22 @@ Custom property | Description | Default
 
       .label {
         padding-right: 5px;
+        font-size: 18px;
+      }
+
+      .endLabel {
+        padding-left: 5px;
+
+      }
+
+      paper-input {
+        margin-top: -15px;
+        text-align: center;
+      }
+
+      vaadin-date-picker {
+        margin-top: -4px;
+        text-align: center;
       }
     </style>
     <h2>ProPlanr-repeat default: [[repeats]]!</h2>
@@ -65,8 +81,8 @@ Custom property | Description | Default
       
       <div class="layout horizontal center wrap">
         <p class="label">Repeat Every: </p><paper-input class="number" value="{{repeatEvery}}" type="number" no-float></paper-input> 
-        {{repeatFrequence}}
-        </div>
+        <p class="endLabel">{{repeatFrequence}}</p>
+      </div>
 
         <div class="layout horizontal center wrap">
           <p class="label">Start On:</p><vaadin-date-picker></vaadin-date-picker>
@@ -74,10 +90,10 @@ Custom property | Description | Default
         
         
           <p class="label">Ends: </p>
-          <paper-checkbox name="never">Never</paper-checkbox>
+          <paper-checkbox name="never"><p class="label">Never</p></paper-checkbox>
          
           <div class="layout horizontal center wrap">
-            <paper-checkbox name="after"></paper-checkbox><p class="label">After:</p><paper-input class="number" type="number"></paper-input><p class="label"> ocurrences</p>
+            <paper-checkbox name="after"></paper-checkbox><p class="label">After:</p><paper-input class="number" type="number"></paper-input><p class="endLabel"> ocurrences</p>
           </div>
 
           <div class="layout horizontal center wrap">
