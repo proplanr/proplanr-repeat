@@ -1,0 +1,29 @@
+<link rel="import" href="bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="bower_components/polymerfire/polymerfire.html">
+
+<dom-module id="save-firebase">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <firebase-app
+      name="proplanr-repeat"
+      api-key="AIzaSyA4Aumq3MnXjuH68ZYVjCsUJpymSrbKodk",
+      auth-domain="proplanr-repeat.firebaseapp.com",
+      database-url="https://proplanr-repeat.firebaseio.com">
+    </firebase-app>
+
+    <firebase-auth
+      id="auth"
+      app-name="proplanr-repeat"
+      provider="google"
+      signed-in="{{signedIn}}"
+      user="{{user}}">
+    </firebase-auth>
+  </template>
+  <script>
+  </script>
+</dom-module>

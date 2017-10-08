@@ -30,7 +30,9 @@
     "paper-listbox": "PolymerElements/paper-listbox#1 - 2",
     "paper-checkbox": "PolymerElements/paper-checkbox#1 - 2",
     "vaadin-date-picker": "vaadin/vaadin-date-picker#^2.0.5",
-    "iron-form": "PolymerElements/iron-form#1 - 2"
+    "iron-form": "PolymerElements/iron-form#1 - 2",
+    "firebase": "4.5.0",
+    "polymerfire": "firebase/polymerfire#^2.2.1"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#1 - 2",
