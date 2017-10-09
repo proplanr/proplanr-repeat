@@ -111,15 +111,14 @@ Custom property | Description | Default
           <paper-checkbox name="never" value="never"><p class="label">Never</p></paper-checkbox>
          
           <div class="layout horizontal center wrap">
-            <paper-checkbox name="after"></paper-checkbox ><p class="label">After:</p><paper-input class="number" type="number" value="{{repeatData.ends}}" no-float></paper-input><p class="endLabel"> ocurrences</p>
+            <paper-checkbox id="after" name="after" value="{{endsAfter::value-changed}}"></paper-checkbox ><p class="label">After:</p><paper-input class="number" type="number" value="{{endsAfter}}"></paper-input><p class="endLabel"> ocurrences</p>
           </div>
 
           <div class="layout horizontal center wrap">
-            <paper-checkbox name="on" value="on"></paper-checkbox><p class="label">On:</p> <vaadin-date-picker value={{repeatData.ends}}></vaadin-date-picker>
+            <paper-checkbox name="on" value="on"></paper-checkbox><p class="label">On:</p> <vaadin-date-picker value={{endsOn}}></vaadin-date-picker>
           </div>
-
           </iron-selector>
-        
+
           <div class="layout horizontal center wrap" id="buttons">
           <paper-button raised on-click="cancelRepeat">CANCEL</paper-button>
           <paper-button raised on-click="saveRepeat">SAVE</paper-button>
@@ -129,65 +128,54 @@ Custom property | Description | Default
     </iron-form>
   </template>
 
-    <script>
-        Polymer({
-            is: 'proplanr-repeat',
-            properties: {
+  <script>
+      Polymer({
+          is: 'proplanr-repeat',
+          properties: {
 
-                /**
-                 * Repeats options: (Daily, Weekly, Monthly, Quarterly, Yearly.
-                 */
-                // repeatFrequence: {
-                //     type: String,
-                //     value: 'days',
-                //     notify: true
-                // },
+              /**
+              * Repeats options: (Daily, Weekly, Monthly, Quarterly, Yearly.
+              */
+              endsOn: {
+                type: String,
+                notify: true
+              },
 
-                // repeatEvery: {
-                //     type: Number,
-                //     value: 0,
-                //     notify: true
-                // },
-                endsOn: {
-                  type: String,
-                  notify: true
-                },
+              endsAfter: {
+                type: Number,
+                notify: true
+              },
 
-                after: {
-                  type: Number,
-                  notify: true
-                },
-
-                repeatData: {
-                  type: Object,
-                  value: function() {
-                    return {};
-                  }
+              repeatData: {
+                type: Object,
+                value: function() {
+                  return {};
                 }
-
-            },
-
-            setEnd: function(event) {
-              if(event.target.checked) {
-                console.log(event.target.checked.length);
-                return this.disabled = true;
               }
-            },
 
-            saveRepeat: function(event) {
-                console.log('saveRepeat', this.repeatData);
-            },
+          },
 
-            cancelRepeat: function(event) {
-                console.log('cancelRepeat');
-                this.resetRepeatForm();
-            },
+          setEnd: function(event) {
+            if(event.target.checked) {
+              console.log(event.target.checked.length);
+              return this.disabled = true;
+            }
+          },
 
-            resetRepeatForm: function(event) {
-                console.log('resetRepeatForm:', event);
-                this.repeatData.repeatFrequence = '';
-                this.repeatData.repeatEvery = ''
-            },
-        });
-    </script>
+          saveRepeat: function(event) {
+            console.log('saveRepeat', this.repeatData, this.endsAfter);
+          },
+
+          cancelRepeat: function(event) {
+            console.log('cancelRepeat');
+            this.resetRepeatForm();
+          },
+
+          resetRepeatForm: function(event) {
+            console.log('resetRepeatForm:', event);
+            this.repeatData.repeatFrequence = '';
+            this.repeatData.repeatEvery = ''
+          },
+      });
+  </script>
 </dom-module>
