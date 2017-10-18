@@ -108,14 +108,14 @@ Custom property | Description | Default
           <p class="label">Ends: </p>
           <iron-selector attr-for-selected="value" selected={{repeatData.ends}} selected-attribute="checked">
 
-          <paper-checkbox name="never" value="never"><p class="label">Never</p></paper-checkbox>
+          <paper-radio-group name="never" value="never"><p class="label">Never</p></paper-radio-group>
          
           <div class="layout horizontal center wrap">
-            <paper-checkbox id="after" name="after" value="{{endsAfter::value-changed}}"></paper-checkbox ><p class="label">After:</p><paper-input class="number" type="number" value="{{endsAfter}}"></paper-input><p class="endLabel"> ocurrences</p>
+            <paper-checkbox id="after" name="after" value="{{}}"></paper-checkbox ><p class="label">After:</p><paper-input class="number" type="number" value={{endsAfter}}></paper-input><p class="endLabel"> ocurrences</p>
           </div>
 
           <div class="layout horizontal center wrap">
-            <paper-checkbox name="on" value="on"></paper-checkbox><p class="label">On:</p> <vaadin-date-picker value={{endsOn}}></vaadin-date-picker>
+            <paper-checkbox name="on" value="{{endsOn}}"></paper-checkbox><p class="label">On:</p> <vaadin-date-picker value={{endsOn}}></vaadin-date-picker>
           </div>
           </iron-selector>
 
@@ -135,6 +135,7 @@ Custom property | Description | Default
 
               /**
               * Repeats options: (Daily, Weekly, Monthly, Quarterly, Yearly.
+              * repeatData Object: repeatFrequence, repeatEvery, startOn, ends
               */
               endsOn: {
                 type: String,
@@ -163,7 +164,8 @@ Custom property | Description | Default
           },
 
           saveRepeat: function(event) {
-            console.log('saveRepeat', this.repeatData, this.endsAfter);
+            console.log('saveRepeat', this.repeatData)
+            console.log('ends', this.endsAfter, this.endsOn);
           },
 
           cancelRepeat: function(event) {
@@ -173,8 +175,7 @@ Custom property | Description | Default
 
           resetRepeatForm: function(event) {
             console.log('resetRepeatForm:', event);
-            this.repeatData.repeatFrequence = '';
-            this.repeatData.repeatEvery = ''
+            
           },
       });
   </script>

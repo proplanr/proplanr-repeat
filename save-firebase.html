@@ -1,5 +1,6 @@
-<link rel="import" href="bower_components/polymerfire/firebase-app.html">
-<link rel="import" href="bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../polymerfire/firebase-app.html">
+<link rel="import" href="../polymerfire/polymerfire.html">
+<link rel="import" href="../polymerfire/firebase-query.html">
 
 <dom-module id="save-firebase">
   <template>
@@ -8,6 +9,12 @@
         display: block;
       }
     </style>
+    <firebase-auth
+      id="auth"
+      app-name="{{appName}}"
+      provider="google"
+      user="{{user}}">
+    </firebase-auth>
 
     <firebase-app
       name="proplanr-repeat"
@@ -16,14 +23,14 @@
       database-url="https://proplanr-repeat.firebaseio.com">
     </firebase-app>
 
-    <firebase-auth
-      id="auth"
-      app-name="proplanr-repeat"
-      provider="google"
-      signed-in="{{signedIn}}"
-      user="{{user}}">
-    </firebase-auth>
-  </template>
+    <firebase-document
+      id="repeatData"
+      app-name="{{appName}}"
+      path="{{saveRepeats}}"
+      data="{{repeatData}}">
+    </firebase-document>
+
+  </template>    
   <script>
   </script>
 </dom-module>
