@@ -10,7 +10,7 @@
       }
     </style>
     <firebase-auth
-      id="auth"
+      id="firebaseAuth"
       app-name="{{appName}}"
       provider="google"
       user="{{user}}">
@@ -23,14 +23,50 @@
       database-url="https://proplanr-repeat.firebaseio.com">
     </firebase-app>
 
-    <firebase-document
+    <!-- <firebase-document
       id="repeatData"
       app-name="{{appName}}"
       path="{{saveRepeats}}"
       data="{{repeatData}}">
-    </firebase-document>
+    </firebase-document> -->
+
+    <proplanr-repeat ></proplanr-repeat>
 
   </template>    
   <script>
+
+    // listen for saveRepeat
+
+    saveData: function(data) {
+      // console.log('logActivity:',action,description,listId,this.user);
+      // Log activity
+      var db = this.$.firebaseAuth.app.database();
+      // var now = new Date().toLocaleString('en-US', {timeZone: 'America/Los_Angeles'});
+      var now = new Date().toLocaleString();
+      // let newRepeatId = db.ref('/repeats').push(data).key;
+
+      db.ref('/repeats').push(data).then(snapshot => {
+        let repeat_key = snapshot.$key;
+
+        // add actions for number occurrencies or end date
+
+        db.ref('/actions').push({
+          repeat_key: repeat_key,
+          title: data.title,
+          due_date: data.due_date
+        })
+
+
+        
+      });
+
+
+
+      // then create actions
+
+
+    }
+
+
   </script>
 </dom-module>
