@@ -124,7 +124,7 @@
           
         <!-- <paper-radio-group name="never" value="never"><p class="label">Never</p> -->
         <paper-radio-group selected="{{repeatData.ends}}" class="layout vertical" on-iron-activate="onSelectedEnds">
-          <paper-radio-button name="never">Never</paper-radio-button>
+          <!-- <paper-radio-button name="never">Never</paper-radio-button> -->
           <paper-radio-button name="on">On</paper-radio-button>
           <paper-radio-button name="after">After</paper-radio-button>
         </paper-radio-group> 
@@ -206,6 +206,7 @@
       saveRepeat: function(event) {
         console.log('saveRepeat', this.repeatData)
         console.log('ends', this.endsAfter, this.endsOn);
+        this.fire('saveRepeat',this.repeatData);
       },
       
       cancelRepeat: function(event) {
