@@ -7,6 +7,7 @@
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-listbox/paper-listbox.html">
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../vaadin-date-picker/vaadin-date-picker.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 
@@ -67,6 +68,15 @@ Custom property | Description | Default
         margin-top: -25px;
         text-align: center;
       }
+      .datePickerP2 {
+        margin-top: -5px;
+      }
+
+      #endOn, #afterContainer {
+        position:relative;
+        top: -100px;
+        left: 100px;
+      }
 
       #buttons {
         float: right;
@@ -101,14 +111,29 @@ Custom property | Description | Default
       </div>
 
         <div class="layout horizontal center wrap">
-          <p class="label">Start On:</p><vaadin-date-picker value="{{repeatData.startOn}}"></vaadin-date-picker>
+          <p class="label">Start On:</p>
+          <vaadin-date-picker id="startOn" value="{{repeatData.startOn}}" class="datePickerP2"></vaadin-date-picker>
         </div>
         
         
           <p class="label">Ends: </p>
-          <iron-selector attr-for-selected="value" selected={{repeatData.ends}} selected-attribute="checked">
+          <!-- <iron-selector attr-for-selected="value" selected={{repeatData.ends}} selected-attribute="checked"> -->
 
-          <paper-radio-group name="never" value="never"><p class="label">Never</p></paper-radio-group>
+          <!-- <paper-radio-group name="never" value="never"><p class="label">Never</p> -->
+          <paper-radio-group selected="{{repeatData.ends}}" class="layout vertical">
+            <paper-radio-button name="never">Never</paper-radio-button>
+            <paper-radio-button name="on">On</paper-radio-button>
+            <paper-radio-button name="after">After</paper-radio-button>
+          </paper-radio-group> 
+
+          <vaadin-date-picker id="endOn" value="{{repeatData.endOn}}" class="datePickerP2" disabled></vaadin-date-picker>
+
+          <div id="afterContainer" class="layout horizontal center">
+            <paper-input id="afterOccurenciesInput" type="number" value="{{repeatData.after_occurencies}}" disabled></paper-input>
+            <div>occurencies</div>
+          </div>
+
+          </paper-radio-group>
          
           <div class="layout horizontal center wrap">
             <paper-checkbox id="after" name="after" value="{{}}"></paper-checkbox ><p class="label">After:</p><paper-input class="number" type="number" value={{endsAfter}}></paper-input><p class="endLabel"> ocurrences</p>
@@ -156,6 +181,17 @@ Custom property | Description | Default
 
           },
 
+          ready: function(event) {
+            let polymerVersion = '';
+            if (Polymer.Element) {
+              polymerVersion = '2.x';
+            } else {
+              polymerVersion = '1.x';
+              this.toggleClass('datePickerP2',false,this.$.startOn);
+            }
+            console.log('ready:',polymerVersion);
+          },
+
           setEnd: function(event) {
             if(event.target.checked) {
               console.log(event.target.checked.length);
@@ -177,6 +213,8 @@ Custom property | Description | Default
             console.log('resetRepeatForm:', event);
             
           },
+
+          
       });
   </script>
 </dom-module>
