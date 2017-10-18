@@ -12,26 +12,26 @@
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 
 <!--
-
-Element providing repeating action similiar to Google Calendar Repeat.. Event.
-
-    <proplanr-repeat></proplanr-repeat>
-
-### Styling
-
-The following custom properties and mixins are available for styling:
-
-Custom property | Description | Default
-----------------|-------------|----------
-`--proplanr-repeat-height` | Custom height for element    | `auto`
-
-### Install
-
-    bower install --save proplanr-repeat
-
-@group ProPlanr Elements
-@element proplanr-repeat
-@demo demo/index.html
+  
+  Element providing repeating action similiar to Google Calendar Repeat.. Event.
+  
+  <proplanr-repeat></proplanr-repeat>
+  
+  ### Styling
+  
+  The following custom properties and mixins are available for styling:
+  
+  Custom property | Description | Default
+  ----------------|-------------|----------
+  `--proplanr-repeat-height` | Custom height for element    | `auto`
+  
+  ### Install
+  
+  bower install --save proplanr-repeat
+  
+  @group ProPlanr Elements
+  @element proplanr-repeat
+  @demo demo/index.html
 -->
 
 <dom-module id="proplanr-repeat">
@@ -46,23 +46,23 @@ Custom property | Description | Default
       .number {
         width: 40px;
       }
-
+      
       .label {
         padding-right: 5px;
         font-size: 18px;
       }
-
+      
       .endLabel {
         padding-left: 5px;
         font-size: 18px;
-
+        
       }
-
+      
       paper-input {
         margin-top: -15px;
         text-align: center;
       }
-
+      
       vaadin-date-picker {
         width: 175px;
         margin-top: -25px;
@@ -71,27 +71,27 @@ Custom property | Description | Default
       .datePickerP2 {
         margin-top: -5px;
       }
-
+      
       #endOn, #afterContainer {
         position:relative;
         top: -100px;
         left: 100px;
       }
-
+      
       #buttons {
         float: right;
       }
-
+      
       iron-form {
         padding-bottom: 40px;
         margin-bottom: 40px;
       }
-
+      
       paper-button {
         margin: 5px;
       }
     </style>
-
+    
     <h2>ProPlanr-repeat default: [[repeats]]!</h2>
     <iron-form>
       <form method="get" action="/form/handler">
@@ -104,117 +104,114 @@ Custom property | Description | Default
             <paper-item value="years">Yearly</paper-item>
           </paper-listbox>
         </paper-dropdown-menu>
-      
-      <div class="layout horizontal center wrap">
-        <p class="label">Repeat Every: </p><paper-input class="number" value="{{repeatData.repeatEvery}}" type="number" no-float></paper-input> 
-        <p class="endLabel">{{repeatData.repeatFrequence}}</p>
-      </div>
-
+        
+        <div class="layout horizontal center wrap">
+          <p class="label">Repeat Every: </p><paper-input class="number" value="{{repeatData.repeatEvery}}" type="number" no-float></paper-input> 
+          <p class="endLabel">{{repeatData.repeatFrequence}}</p>
+        </div>
+        
         <div class="layout horizontal center wrap">
           <p class="label">Start On:</p>
           <vaadin-date-picker id="startOn" value="{{repeatData.startOn}}" class="datePickerP2"></vaadin-date-picker>
         </div>
         
+        <p class="label">Ends: </p>
+        <!-- <iron-selector attr-for-selected="value" selected={{repeatData.ends}} selected-attribute="checked"> -->
+          
+        <!-- <paper-radio-group name="never" value="never"><p class="label">Never</p> -->
+        <paper-radio-group selected="{{repeatData.ends}}" class="layout vertical">
+          <paper-radio-button name="never">Never</paper-radio-button>
+          <paper-radio-button name="on">On</paper-radio-button>
+          <paper-radio-button name="after">After</paper-radio-button>
+        </paper-radio-group> 
         
-          <p class="label">Ends: </p>
-          <!-- <iron-selector attr-for-selected="value" selected={{repeatData.ends}} selected-attribute="checked"> -->
-
-          <!-- <paper-radio-group name="never" value="never"><p class="label">Never</p> -->
-          <paper-radio-group selected="{{repeatData.ends}}" class="layout vertical">
-            <paper-radio-button name="never">Never</paper-radio-button>
-            <paper-radio-button name="on">On</paper-radio-button>
-            <paper-radio-button name="after">After</paper-radio-button>
-          </paper-radio-group> 
-
-          <vaadin-date-picker id="endOn" value="{{repeatData.endOn}}" class="datePickerP2" disabled></vaadin-date-picker>
-
-          <div id="afterContainer" class="layout horizontal center">
-            <paper-input id="afterOccurenciesInput" type="number" value="{{repeatData.after_occurencies}}" disabled></paper-input>
-            <div>occurencies</div>
+        <vaadin-date-picker id="endOn" value="{{repeatData.endOn}}" class="datePickerP2" disabled></vaadin-date-picker>
+        
+        <div id="afterContainer" class="layout horizontal center">
+          <paper-input id="afterOccurenciesInput" type="number" value="{{repeatData.after_occurencies}}" disabled></paper-input>
+          <div>occurencies</div>
+        </div>
+                    
+        <div class="layout horizontal center wrap">
+          <paper-checkbox id="after" name="after" value="{{}}"></paper-checkbox ><p class="label">After:</p><paper-input class="number" type="number" value={{endsAfter}}></paper-input><p class="endLabel"> ocurrences</p>
           </div>
-
-          </paper-radio-group>
-         
-          <div class="layout horizontal center wrap">
-            <paper-checkbox id="after" name="after" value="{{}}"></paper-checkbox ><p class="label">After:</p><paper-input class="number" type="number" value={{endsAfter}}></paper-input><p class="endLabel"> ocurrences</p>
-          </div>
-
+          
           <div class="layout horizontal center wrap">
             <paper-checkbox name="on" value="{{endsOn}}"></paper-checkbox><p class="label">On:</p> <vaadin-date-picker value={{endsOn}}></vaadin-date-picker>
           </div>
-          </iron-selector>
-
-          <div class="layout horizontal center wrap" id="buttons">
+        </iron-selector>
+        
+        <div class="layout horizontal center wrap" id="buttons">
           <paper-button raised on-click="cancelRepeat">CANCEL</paper-button>
           <paper-button raised on-click="saveRepeat">SAVE</paper-button>
           <paper-button raised on-click="resetRepeatForm">RESET</paper-button>
-          </div>
+        </div>
       </form>
     </iron-form>
   </template>
-
+  
   <script>
-      Polymer({
-          is: 'proplanr-repeat',
-          properties: {
-
-              /**
-              * Repeats options: (Daily, Weekly, Monthly, Quarterly, Yearly.
-              * repeatData Object: repeatFrequence, repeatEvery, startOn, ends
-              */
-              endsOn: {
-                type: String,
-                notify: true
-              },
-
-              endsAfter: {
-                type: Number,
-                notify: true
-              },
-
-              repeatData: {
-                type: Object,
-                value: function() {
-                  return {};
-                }
-              }
-
-          },
-
-          ready: function(event) {
-            let polymerVersion = '';
-            if (Polymer.Element) {
-              polymerVersion = '2.x';
-            } else {
-              polymerVersion = '1.x';
-              this.toggleClass('datePickerP2',false,this.$.startOn);
-            }
-            console.log('ready:',polymerVersion);
-          },
-
-          setEnd: function(event) {
-            if(event.target.checked) {
-              console.log(event.target.checked.length);
-              return this.disabled = true;
-            }
-          },
-
-          saveRepeat: function(event) {
-            console.log('saveRepeat', this.repeatData)
-            console.log('ends', this.endsAfter, this.endsOn);
-          },
-
-          cancelRepeat: function(event) {
-            console.log('cancelRepeat');
-            this.resetRepeatForm();
-          },
-
-          resetRepeatForm: function(event) {
-            console.log('resetRepeatForm:', event);
-            
-          },
-
-          
-      });
+    Polymer({
+      is: 'proplanr-repeat',
+      properties: {
+        
+        /**
+        * Repeats options: (Daily, Weekly, Monthly, Quarterly, Yearly.
+        * repeatData Object: repeatFrequence, repeatEvery, startOn, ends
+        */
+        endsOn: {
+          type: String,
+          notify: true
+        },
+        
+        endsAfter: {
+          type: Number,
+          notify: true
+        },
+        
+        repeatData: {
+          type: Object,
+          value: function() {
+            return {};
+          }
+        }
+        
+      },
+      
+      ready: function(event) {
+        let polymerVersion = '';
+        if (Polymer.Element) {
+          polymerVersion = '2.x';
+        } else {
+          polymerVersion = '1.x';
+          this.toggleClass('datePickerP2',false,this.$.startOn);
+        }
+        console.log('ready:',polymerVersion);
+      },
+      
+      setEnd: function(event) {
+        if(event.target.checked) {
+          console.log(event.target.checked.length);
+          return this.disabled = true;
+        }
+      },
+      
+      saveRepeat: function(event) {
+        console.log('saveRepeat', this.repeatData)
+        console.log('ends', this.endsAfter, this.endsOn);
+      },
+      
+      cancelRepeat: function(event) {
+        console.log('cancelRepeat');
+        this.resetRepeatForm();
+      },
+      
+      resetRepeatForm: function(event) {
+        console.log('resetRepeatForm:', event);
+        
+      },
+      
+      
+    });
   </script>
 </dom-module>
