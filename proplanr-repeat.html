@@ -40,11 +40,15 @@
       :host {
         --calculated-proplanr-repeat-height: var(--proplanr-repeat-height, auto);
         display: block;
-        /* min-height: 330px; */
+        height: 460px;
         width: 300px;
         padding: 20px;
         border: 1px solid gray;
       }
+
+      /* * {
+        border: red solid 1px;
+      } */
       
       .number {
         width: 50px;
@@ -71,28 +75,43 @@
         margin-top: -25px;
         text-align: center;
       }
-      .datePickerP2 {
-        margin-top: -5px;
-      }
       
-      #endOn, #afterContainer {
+      #endOn {
         position:relative;
-        top: -100px;
-        left: 90px;
+        margin-top: -33px;
+        left: 70px;
+      }
+
+      #afterContainer {
+        position:relative;
+        margin-top: 3px;
+        left: 80px;
+      }
+
+      paper-radio-group {
+        position: absolute;
+        margin-top: -15px;
       }
       
       #buttons {
-        /* width: 360px; */
-        margin-top: -80px;
-        margin-right: 25px;
         float: right;
-        /* margin: 0 auto; */
-        /* text-align: center; */
-        /* display: block; */
       }
       
       paper-button {
-        margin: 5px;
+        margin: 5px 0px 5px 10px;
+      }
+
+      /* polymer 2 styles */
+      .datePickerP2 {
+        margin-top: 4px;
+      }
+
+      .endOnP2 {
+        margin-top: -150px;
+      }
+
+      .afterContainerP2  {
+        margin-top: 3px;
       }
     </style>
     
@@ -117,7 +136,7 @@
         
         <div class="layout horizontal center">
           <p class="label">Start On:</p>
-          <vaadin-date-picker id="startOn" value="{{repeatData.start_on}}" class="datePickerP2"></vaadin-date-picker>
+          <vaadin-date-picker id="startOn" value="{{repeatData.start_on}}" class$="datePickerP2"></vaadin-date-picker>
         </div>
         
         <p class="label">Ends: </p>
@@ -127,14 +146,14 @@
           <paper-radio-button name="after" class="label">After</paper-radio-button>
         </paper-radio-group> 
         
-        <vaadin-date-picker id="endOn" value="{{repeatData.end_on}}" class="datePickerP2" disabled></vaadin-date-picker>
+        <vaadin-date-picker id="endOn" value="{{repeatData.end_on}}" class$="endOnP2" disabled></vaadin-date-picker>
         
-        <div id="afterContainer" class="layout horizontal center">
+        <div id="afterContainer"  class$="afterContainerP2" class="layout horizontal center">
           <paper-input id="afterOccurrencesInput" type="number" value="{{repeatData.after_occurrences}}" class="number" disabled></paper-input>
           <p class="endLabel">occurrences</p>
         </div>
         
-        <div class="layout horizontal center" id="buttons">
+        <div class="layout horizontal" id="buttons">
           <paper-button raised on-click="resetRepeatForm">RESET</paper-button>
           <paper-button raised on-click="cancelRepeat">CANCEL</paper-button>
           <paper-button raised on-click="saveRepeat">SAVE</paper-button>
@@ -178,14 +197,16 @@
         this.set('repeatData.repeat_every', 1);
         if (Polymer.Element) {
           polymerVersion = '2.x';
+          this.toggleClass('datePickerP2',true,this.$.startOn);
+          this.toggleClass('endOnP2',true,this.$.endOn);
+          this.toggleClass('afterContainerP2',true,this.$.afterContainer);
         } else {
           polymerVersion = '1.x';
           this.toggleClass('datePickerP2',false,this.$.startOn);
-          // this.set('repeatData.endOn',this.repeatData.start_on);
-          // this.set('repeatData.after_occurencies',1);
+          this.toggleClass('endOnP2',false,this.$.endOn);
+          this.toggleClass('afterContainerP2',false,this.$.afterContainer);
         }
         console.log('ready:',polymerVersion);
-        // this.repeatData.after_occurencies = 1;
       },
       
       setEnd: function(event) {
@@ -218,7 +239,7 @@
           if (this.repeatData.ends === 'on') {
             this.$.endOn.disabled = false;
             this.$.afterOccurrencesInput.disabled = true;
-            this.set('repeatData.after_occurrences', "");
+            this.set('repeatData.after_occurrences', 1);
           } else if (this.repeatData.ends === 'after') {
             this.$.endOn.disabled = true;
             this.$.afterOccurrencesInput.disabled = false;
