@@ -41,13 +41,13 @@
         --calculated-proplanr-repeat-height: var(--proplanr-repeat-height, auto);
         display: block;
         /* min-height: 330px; */
-        width: 360px;
+        width: 300px;
         padding: 20px;
         border: 1px solid gray;
       }
       
       .number {
-        width: 40px;
+        width: 50px;
       }
       
       .label {
@@ -78,13 +78,13 @@
       #endOn, #afterContainer {
         position:relative;
         top: -100px;
-        left: 100px;
+        left: 90px;
       }
       
       #buttons {
         /* width: 360px; */
         margin-top: -80px;
-        margin-right: 10px;
+        margin-right: 25px;
         float: right;
         /* margin: 0 auto; */
         /* text-align: center; */
@@ -99,8 +99,9 @@
     <h2>ProPlanr-repeat default: [[repeats]]!</h2>
     <iron-form>
       <form method="get" action="/form/handler">
+        <paper-input value="{{repeatData.title}}" label="Title"></paper-input> 
         <paper-dropdown-menu label="Repeat">
-          <paper-listbox class="dropdown-content" slot="dropdown-content" selected="{{repeatData.repeatFrequence}}"  attr-for-selected="value">
+          <paper-listbox class="dropdown-content" slot="dropdown-content" selected="{{repeatData.repeat_frequence}}"  attr-for-selected="value">
             <paper-item value="days">Daily</paper-item>
             <paper-item value="weeks">Weekly</paper-item>
             <paper-item value="months">Monthly</paper-item>
@@ -110,8 +111,8 @@
         </paper-dropdown-menu>
         
         <div class="layout horizontal center">
-          <p class="label">Repeat Every: </p><paper-input class="number" value="{{repeatData.repeatEvery}}" type="number" no-float></paper-input> 
-          <p class="endLabel">{{repeatData.repeatFrequence}}</p>
+          <p class="label">Repeat Every: </p><paper-input class="number" value="{{repeatData.repeat_every}}" type="number" no-float></paper-input> 
+          <p class="endLabel">{{repeatData.repeat_frequence}}</p>
         </div>
         
         <div class="layout horizontal center">
@@ -120,34 +121,22 @@
         </div>
         
         <p class="label">Ends: </p>
-        <!-- <iron-selector attr-for-selected="value" selected={{repeatData.ends}} selected-attribute="checked"> -->
-          
-        <!-- <paper-radio-group name="never" value="never"><p class="label">Never</p> -->
         <paper-radio-group selected="{{repeatData.ends}}" class="layout vertical" on-iron-activate="onSelectedEnds">
           <!-- <paper-radio-button name="never">Never</paper-radio-button> -->
-          <paper-radio-button name="on">On</paper-radio-button>
-          <paper-radio-button name="after">After</paper-radio-button>
+          <paper-radio-button name="on" class="label">On</paper-radio-button>
+          <paper-radio-button name="after" class="label">After</paper-radio-button>
         </paper-radio-group> 
         
-        <vaadin-date-picker id="endOn" value="{{repeatData.endOn}}" class="datePickerP2" disabled></vaadin-date-picker>
+        <vaadin-date-picker id="endOn" value="{{repeatData.end_on}}" class="datePickerP2" disabled></vaadin-date-picker>
         
         <div id="afterContainer" class="layout horizontal center">
-          <paper-input id="afterOccurenciesInput" type="number" value="{{repeatData.after_occurencies}}" disabled></paper-input>
-          <div>occurencies</div>
+          <paper-input id="afterOccurrencesInput" type="number" value="{{repeatData.after_occurrences}}" class="number" disabled></paper-input>
+          <p class="endLabel">occurrences</p>
         </div>
-                    
-        <!-- <div class="layout horizontal center wrap">
-          <paper-checkbox id="after" name="after" value="{{}}"></paper-checkbox ><p class="label">After:</p><paper-input class="number" type="number" value={{endsAfter}}></paper-input><p class="endLabel"> ocurrences</p>
-          </div>
-          
-          <div class="layout horizontal center wrap">
-            <paper-checkbox name="on" value="{{endsOn}}"></paper-checkbox><p class="label">On:</p> <vaadin-date-picker value={{endsOn}}></vaadin-date-picker>
-          </div>
-        </iron-selector> -->
         
         <div class="layout horizontal center" id="buttons">
-          <paper-button on-click="resetRepeatForm">RESET</paper-button>
-          <paper-button on-click="cancelRepeat">CANCEL</paper-button>
+          <paper-button raised on-click="resetRepeatForm">RESET</paper-button>
+          <paper-button raised on-click="cancelRepeat">CANCEL</paper-button>
           <paper-button raised on-click="saveRepeat">SAVE</paper-button>
         </div>
       </form>
@@ -160,9 +149,8 @@
       properties: {
         
         /**
-        * Repeats options: (Daily, Weekly, Monthly, Quarterly, Yearly.
-        * repeatData Object: repeatFrequence, repeatEvery, startOn, ends
-        */
+        * Repeats options: (Daily, Weekly, Monthly, Quarterly, Yearly.*/
+        
         endsOn: {
           type: String,
           notify: true
@@ -172,7 +160,9 @@
           type: Number,
           notify: true
         },
-        
+
+        /* repeatData Object: title, repeat_frequence, repeat_every, start_on, ends, end_on, after_occurrences
+        */
         repeatData: {
           type: Object,
           value: function() {
@@ -184,13 +174,15 @@
       
       ready: function(event) {
         let polymerVersion = '';
+        this.set('repeatData.after_occurrences', 1);
+        this.set('repeatData.repeat_every', 1);
         if (Polymer.Element) {
           polymerVersion = '2.x';
         } else {
           polymerVersion = '1.x';
           this.toggleClass('datePickerP2',false,this.$.startOn);
-          this.set('repeatData.endOn',this.repeatData.start_on);
-          this.set('repeatData.after_occurencies',1);
+          // this.set('repeatData.endOn',this.repeatData.start_on);
+          // this.set('repeatData.after_occurencies',1);
         }
         console.log('ready:',polymerVersion);
         // this.repeatData.after_occurencies = 1;
@@ -205,7 +197,6 @@
       
       saveRepeat: function(event) {
         console.log('saveRepeat', this.repeatData)
-        console.log('ends', this.endsAfter, this.endsOn);
         this.fire('saveRepeat',this.repeatData);
       },
       
@@ -222,11 +213,17 @@
       onSelectedEnds: function(event) {
         this.async(function() {
           console.log('onSelectedType',this.repeatData.ends);
+          console.log("disabled", this.$.endOn.disabled);
           this.textFilter = '';
-          if (this.repeatData.ends === 'never') {
-            this.$.endOn.disabled = true;
-          } else if (this.repeatData.ends === 'on') {
+          if (this.repeatData.ends === 'on') {
             this.$.endOn.disabled = false;
+            this.$.afterOccurrencesInput.disabled = true;
+            this.set('repeatData.after_occurrences', "");
+          } else if (this.repeatData.ends === 'after') {
+            this.$.endOn.disabled = true;
+            this.$.afterOccurrencesInput.disabled = false;
+            this.set('repeatData.end_on', "");
+            // this.set('repeatData.after_occurrences', 1);
           }
         },1);
       }
