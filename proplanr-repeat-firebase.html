@@ -2,8 +2,8 @@
 <link rel="import" href="../polymerfire/polymerfire.html">
 <link rel="import" href="../polymerfire/firebase-query.html">
 <link rel="import" href="../polymerfire/firebase-document.html">
-<link rel="import" href="./proplanr-repeat.html">
 <link rel="import" href="../moment-element/moment-element.html">
+<link rel="import" href="./proplanr-repeat.html">
 
 <dom-module id="proplanr-repeat-firebase">
   <template>
@@ -13,7 +13,6 @@
       }
     </style>
     
-
     <firebase-document
       id="repeatData"
       app-name="proplanr-repeat"
@@ -21,7 +20,7 @@
       data="{{repeatData}}">
     </firebase-document>
 
-    <firebase-query log
+    <firebase-query
       id="repeatsData"
       app-name="proplanr-repeat"
       path="/repeats"
@@ -45,44 +44,47 @@
       listeners: {
         'saveRepeat': 'saveData'
       },
-    // listen for saveRepeat
-    ready: function(event) {
-      this.db = this.$.actionData.app.database();
-      console.log('proplanr-repeat-firebase',this.db);
-    },
+      // listen for saveRepeat
+      ready: function(event) {
+        this.db = this.$.actionData.app.database();
+        console.log('proplanr-repeat-firebase',this.db);
+      },
 
-    saveData: function(data) {
-      // console.log('logActivity:',action,description,listId,this.user);
-      // Log activity
-        // var db = this.$.firebaseAuth.app.database();
-      // var now = new Date().toLocaleString('en-US', {timeZone: 'America/Los_Angeles'});
-        // var now = new Date().toLocalString();
-      // let newRepeatId = db.ref('/repeats').push(data).key;
+      saveData: function(data) {
+        // console.log('logActivity:',action,description,listId,this.user);
+        // Log activity
+          // var db = this.$.firebaseAuth.app.database();
+        // var now = new Date().toLocaleString('en-US', {timeZone: 'America/Los_Angeles'});
+          // var now = new Date().toLocalString();
+        // let newRepeatId = db.ref('/repeats').push(data).key;
 
-      this.db.ref('/repeats').push(data.detail).then(snapshot => {
-        let repeat_key = snapshot.key;
-        let repeat = data.detail;
-        // add actions for number occurrencies or end date
+        this.db.ref('/repeats').push(data.detail).then(snapshot => {
+          let repeat_key = snapshot.key;
+          let repeat = data.detail;
+          // add actions for number occurrencies or end date
 
-        if(repeat.ends === 'after') {
-          let every = repeat.repeat_every;
-          saveActions(every);
-        } else if(repeat.ends === 'on') {
-          
-        }
+          if (repeat.ends === 'after') {
+            let every = repeat.repeat_every;
+            this.saveActions(every,repeat,repeat_key);
+          } else if(repeat.ends === 'on') {
+            
+          }
 
-        else {
-          console.log("end on");
-        }
-        saveActions: function(numberOfActions) {
-        let due_date;
-          for(let i = 0; i < repeat.after_occurrences; i++) {
-            if(repeat.repeat_frequence === "days") {
-              if(i === 0) {
-                due_date = repeat.start_on;
-              } else {
-                due_date = moment(due_date).add(every, 'days');
-              }
+          else {
+            console.log("end on");
+          }     
+        });
+      },
+
+      saveActions: function(every,repeat,repeat_key) {
+        let due_date = repeat.start_on;
+        for(let i = 0; i < repeat.after_occurrences; i++) {
+          if (i > 0) {
+            due_date = moment(due_date).add(every, 'days');
+          } else  {
+            if (repeat.repeat_frequence === "days") {
+            if (i > 0) {
+              due_date = moment(due_date).add(every, 'days');
             } else if(repeat.repeat_frequence === "weeks") {
               if(i === 0) {
                 due_date = repeat.start_on;
@@ -108,17 +110,16 @@
                 due_date = moment(due_date).add(every, 'years');
               }
             }
-            this.db.ref('/actions').push({
-              repeat_key: repeat_key,
-              title: repeat.title,
-              due_date: due_date.toLocaleString()
-            })
           }
-      } 
-
-        });
-      },
-
+          
+          console.log(repeat.title, due_date.toLocaleString(), repeat_key)
+          this.db.ref('/actions').push({
+            repeat_key: repeat_key,
+            title: repeat.title,
+            due_date: moment(due_date,'YYYY-MM-DD')
+          });
+        }
+      }
       
     });
 

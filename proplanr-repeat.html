@@ -75,6 +75,10 @@
         margin-top: -25px;
         text-align: center;
       }
+
+      #titleInput {
+        text-align: left;       
+      }
       
       #endOn {
         position:relative;
@@ -118,7 +122,7 @@
     <h2>ProPlanr-repeat default: [[repeats]]!</h2>
     <iron-form>
       <form method="get" action="/form/handler">
-        <paper-input value="{{repeatData.title}}" label="Title"></paper-input> 
+        <paper-input id="titleInput" value="{{repeatData.title}}" label="Title"></paper-input> 
         <paper-dropdown-menu label="Repeat">
           <paper-listbox class="dropdown-content" slot="dropdown-content" selected="{{repeatData.repeat_frequence}}"  attr-for-selected="value">
             <paper-item value="days">Daily</paper-item>
