@@ -65,9 +65,18 @@
         // add actions for number occurrencies or end date
 
         if(repeat.ends === 'after') {
-          let due_date;
+          let every = repeat.repeat_every;
+          saveActions(every);
+        } else if(repeat.ends === 'on') {
+          
+        }
+
+        else {
+          console.log("end on");
+        }
+        saveActions: function(numberOfActions) {
+        let due_date;
           for(let i = 0; i < repeat.after_occurrences; i++) {
-            let every = repeat.repeat_every;
             if(repeat.repeat_frequence === "days") {
               if(i === 0) {
                 due_date = repeat.start_on;
@@ -105,19 +114,12 @@
               due_date: due_date.toLocaleString()
             })
           }
-        }
-
-        else {
-          console.log("end on");
-        }
-          
+      } 
 
         });
-      }
+      },
 
-      // then create actions
-
-
+      
     });
 
 
