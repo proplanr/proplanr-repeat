@@ -29,7 +29,7 @@
     "paper-item": "PolymerElements/paper-item#1 - 2",
     "paper-listbox": "PolymerElements/paper-listbox#1 - 2",
     "paper-checkbox": "PolymerElements/paper-checkbox#1 - 2",
-    "vaadin-date-picker": "vaadin/vaadin-date-picker#^2.0.5",
+    "vaadin-date-picker": "vaadin/vaadin-date-picker#^2.0.6",
     "iron-form": "PolymerElements/iron-form#1 - 2",
     "paper-radio-group": "PolymerElements/paper-radio-group#1 - 2",
     "polymerfire": "firebase/polymerfire#^2.2.1"
@@ -51,7 +51,7 @@
         "paper-item": "PolymerElements/paper-item#^1.0.0",
         "paper-listbox": "PolymerElements/paper-listbox#^1.0.0",
         "paper-checkbox": "PolymerElements/paper-checkbox#^1.0.1",
-        "vaadin-date-picker": "vaadin/vaadin-date-picker#^1.0.5",
+        "vaadin-date-picker": "vaadin/vaadin-date-picker#^1.2.4",
         "iron-form": "PolymerElements/iron-form#^1.0.1",
         "paper-radio-group": "PolymerElements/paper-radio-group#^1.2.0",
         "polymerfire": "firebase/polymerfire#^0.11.0"
