@@ -3,6 +3,7 @@
 <link rel="import" href="../polymerfire/firebase-query.html">
 <link rel="import" href="../polymerfire/firebase-document.html">
 <link rel="import" href="./proplanr-repeat.html">
+<link rel="import" href="../moment-element/moment-element.html">
 
 <dom-module id="proplanr-repeat-firebase">
   <template>
@@ -15,21 +16,21 @@
 
     <firebase-document
       id="repeatData"
-      app-name="{{appName}}"
+      app-name="proplanr-repeat"
       path="/repeats/key1"
       data="{{repeatData}}">
     </firebase-document>
 
     <firebase-query log
       id="repeatsData"
-      app-name="{{appName}}"
+      app-name="proplanr-repeat"
       path="/repeats"
       data="{{repeatsData}}">
     </firebase-query>
 
     <firebase-query
       id="actionData"
-      app-name="{{appName}}"
+      app-name="proplanr-repeat"
       path="/actions"
       data="{{actionsData}}">
     </firebase-query>
@@ -61,16 +62,38 @@
       this.db.ref('/repeats').push(data.detail).then(snapshot => {
         let repeat_key = snapshot.key;
         let repeat = data.detail;
-        // console.log('data.detail',data.detail);
-        // console.log('snapshot',snapshot);
-        // console.log('repeat_key',repeat_key);
         // add actions for number occurrencies or end date
 
-          // db.ref('/actions').push({
-          //   repeat_key: repeat_key,
-          //   title: repeat.title,
-          //   due_date: repeat.due_date
-          // })
+        if(repeat.ends === 'after') {
+          let due_date;
+          for(let i = 0; i < repeat.after_occurrences; i++) {
+            let every = repeat.repeat_every;
+            console.log(due_date);
+            if(repeat.repeat_frequence === "days") {
+              if(i === 0) {
+                due_date = repeat.start_on;
+              } else {
+                due_date = moment(due_date).add(every, 'days');
+              }
+            } else if(repeat.repeat_frequence === "weeks") {
+              if(i === 0) {
+                due_date = repeat.start_on;
+              } else {
+                due_date = moment(due_date).add(every, 'weeks');
+              }
+            }
+            this.db.ref('/actions').push({
+              repeat_key: repeat_key,
+              title: repeat.title,
+              due_date: due_date.toLocaleString()
+            })
+          }
+        }
+
+        else {
+          console.log("end on");
+        }
+          
 
         });
       }
