@@ -1,38 +1,39 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../polymerfire/firebase-app.html">
 <link rel="import" href="../polymerfire/polymerfire.html">
 <link rel="import" href="../polymerfire/firebase-query.html">
+<link rel="import" href="../polymerfire/firebase-document.html">
 <link rel="import" href="./proplanr-repeat.html">
 
-<dom-module id="save-firebase">
+<dom-module id="proplanr-repeat-firebase">
   <template>
     <style>
       :host {
         display: block;
       }
     </style>
-    <firebase-auth
-      id="firebaseAuth"
-      app-name="{{appName}}"
-      provider="google"
-      user="{{user}}">
-    </firebase-auth>
     
-    <firebase-app
-      name="proplanr-repeat"
-      api-key="AIzaSyA4Aumq3MnXjuH68ZYVjCsUJpymSrbKodk",
-      auth-domain="proplanr-repeat.firebaseapp.com",
-      database-url="https://proplanr-repeat.firebaseio.com">
-    </firebase-app>
 
-    <!-- <firebase-document
+    <firebase-document
       id="repeatData"
       app-name="{{appName}}"
-      path="{{saveRepeats}}"
+      path="/repeats/key1"
       data="{{repeatData}}">
-    </firebase-document> -->
+    </firebase-document>
 
-    <h2>Hello</h2>
+    <firebase-query log
+      id="repeatsData"
+      app-name="{{appName}}"
+      path="/repeats"
+      data="{{repeatsData}}">
+    </firebase-query>
+
+    <firebase-query
+      id="actionData"
+      app-name="{{appName}}"
+      path="/actions"
+      data="{{actionsData}}">
+    </firebase-query>
+
     <proplanr-repeat></proplanr-repeat>
 
   </template>    
@@ -45,28 +46,30 @@
       },
     // listen for saveRepeat
     ready: function(event) {
-      console.log('test');
+      this.db = this.$.actionData.app.database();
+      console.log('proplanr-repeat-firebase',this.db);
     },
-      saveData: function(data) {
+
+    saveData: function(data) {
       // console.log('logActivity:',action,description,listId,this.user);
       // Log activity
-        var db = this.$.firebaseAuth.app.database();
+        // var db = this.$.firebaseAuth.app.database();
       // var now = new Date().toLocaleString('en-US', {timeZone: 'America/Los_Angeles'});
-        var now = new Date().toLocalString();
+        // var now = new Date().toLocalString();
       // let newRepeatId = db.ref('/repeats').push(data).key;
 
-        db.ref('/repeats').push(data).then(snapshot => {
-        let repeat_key = snapshot.$key;
-        console.log(data);
-        console.log(snapshot);
-        console.log(repeat_key);
-
+      this.db.ref('/repeats').push(data.detail).then(snapshot => {
+        let repeat_key = snapshot.key;
+        let repeat = data.detail;
+        // console.log('data.detail',data.detail);
+        // console.log('snapshot',snapshot);
+        // console.log('repeat_key',repeat_key);
         // add actions for number occurrencies or end date
 
           // db.ref('/actions').push({
           //   repeat_key: repeat_key,
-          //   title: data.title,
-          //   due_date: data.due_date
+          //   title: repeat.title,
+          //   due_date: repeat.due_date
           // })
 
         });
