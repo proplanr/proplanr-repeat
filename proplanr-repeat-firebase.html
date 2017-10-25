@@ -68,7 +68,6 @@
           let due_date;
           for(let i = 0; i < repeat.after_occurrences; i++) {
             let every = repeat.repeat_every;
-            console.log(due_date);
             if(repeat.repeat_frequence === "days") {
               if(i === 0) {
                 due_date = repeat.start_on;
@@ -80,6 +79,24 @@
                 due_date = repeat.start_on;
               } else {
                 due_date = moment(due_date).add(every, 'weeks');
+              } 
+            } else if(repeat.repeat_frequence === "months") {
+              if(i === 0) {
+                due_date = repeat.start_on;
+              } else {
+                due_date = moment(due_date).add(every, 'months');
+              }
+            } else if(repeat.repeat_frequence === "quarters") {
+              if(i === 0) {
+                due_date = repeat.start_on;
+              } else {
+                due_date = moment(due_date).add(every, 'quarters');
+              }
+            } else if(repeat.repeat_frequence === "years") {
+              if(i === 0) {
+                due_date = repeat.start_on;
+              } else {
+                due_date = moment(due_date).add(every, 'years');
               }
             }
             this.db.ref('/actions').push({
