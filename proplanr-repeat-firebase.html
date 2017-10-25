@@ -1,6 +1,8 @@
+<link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../polymerfire/firebase-app.html">
 <link rel="import" href="../polymerfire/polymerfire.html">
 <link rel="import" href="../polymerfire/firebase-query.html">
+<link rel="import" href="./proplanr-repeat.html">
 
 <dom-module id="save-firebase">
   <template>
@@ -15,7 +17,7 @@
       provider="google"
       user="{{user}}">
     </firebase-auth>
-
+    
     <firebase-app
       name="proplanr-repeat"
       api-key="AIzaSyA4Aumq3MnXjuH68ZYVjCsUJpymSrbKodk",
@@ -30,42 +32,50 @@
       data="{{repeatData}}">
     </firebase-document> -->
 
-    <proplanr-repeat ></proplanr-repeat>
+    <h2>Hello</h2>
+    <proplanr-repeat></proplanr-repeat>
 
   </template>    
   <script>
+    Polymer({
+      is: 'proplanr-repeat-firebase', 
 
+      listeners: {
+        'saveRepeat': 'saveData'
+      },
     // listen for saveRepeat
-
-    saveData: function(data) {
+    ready: function(event) {
+      console.log('test');
+    },
+      saveData: function(data) {
       // console.log('logActivity:',action,description,listId,this.user);
       // Log activity
-      var db = this.$.firebaseAuth.app.database();
+        var db = this.$.firebaseAuth.app.database();
       // var now = new Date().toLocaleString('en-US', {timeZone: 'America/Los_Angeles'});
-      var now = new Date().toLocaleString();
+        var now = new Date().toLocalString();
       // let newRepeatId = db.ref('/repeats').push(data).key;
 
-      db.ref('/repeats').push(data).then(snapshot => {
+        db.ref('/repeats').push(data).then(snapshot => {
         let repeat_key = snapshot.$key;
+        console.log(data);
+        console.log(snapshot);
+        console.log(repeat_key);
 
         // add actions for number occurrencies or end date
 
-        db.ref('/actions').push({
-          repeat_key: repeat_key,
-          title: data.title,
-          due_date: data.due_date
-        })
+          // db.ref('/actions').push({
+          //   repeat_key: repeat_key,
+          //   title: data.title,
+          //   due_date: data.due_date
+          // })
 
-
-        
-      });
-
-
+        });
+      }
 
       // then create actions
 
 
-    }
+    });
 
 
   </script>

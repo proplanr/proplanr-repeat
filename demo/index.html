@@ -8,10 +8,15 @@
 	<title>proplanr-repeat demo</title>
 
 	<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-
+	<script>
+      window.Polymer = {
+        dom: 'shady',
+        lazyRegister: true
+      };
+    </script>
 	<link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
 	<link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-	<link rel="import" href="../proplanr-repeat.html">
+	<link rel="import" href="../proplanr-repeat-firebase.html">
 
 	<custom-style include="demo-pages-shared-styles">
 		<style is="custom-style" include="demo-pages-shared-styles">
@@ -27,7 +32,7 @@
 		<h3>Basic proplanr-repeat demo</h3>
 		<demo-snippet>
 			<template>
-				<proplanr-repeat></proplanr-repeat>
+				<proplanr-repeat-firebase></proplanr-repeat-firebase>
 			</template>
 		</demo-snippet>
 	</div>
