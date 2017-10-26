@@ -80,47 +80,16 @@
         let due_date = repeat.start_on;
         for(let i = 0; i < repeat.after_occurrences; i++) {
           if (i > 0) {
-            due_date = moment(due_date).add(every, 'days');
-          } else  {
-            if (repeat.repeat_frequence === "days") {
-            if (i > 0) {
-              due_date = moment(due_date).add(every, 'days');
-            } else if(repeat.repeat_frequence === "weeks") {
-              if(i === 0) {
-                due_date = repeat.start_on;
-              } else {
-                due_date = moment(due_date).add(every, 'weeks');
-              } 
-            } else if(repeat.repeat_frequence === "months") {
-              if(i === 0) {
-                due_date = repeat.start_on;
-              } else {
-                due_date = moment(due_date).add(every, 'months');
-              }
-            } else if(repeat.repeat_frequence === "quarters") {
-              if(i === 0) {
-                due_date = repeat.start_on;
-              } else {
-                due_date = moment(due_date).add(every, 'quarters');
-              }
-            } else if(repeat.repeat_frequence === "years") {
-              if(i === 0) {
-                due_date = repeat.start_on;
-              } else {
-                due_date = moment(due_date).add(every, 'years');
-              }
-            }
+            due_date = moment(due_date).add(every, repeat.repeat_frequence);
           }
-          
           console.log(repeat.title, due_date.toLocaleString(), repeat_key)
           this.db.ref('/actions').push({
             repeat_key: repeat_key,
             title: repeat.title,
-            due_date: moment(due_date,'YYYY-MM-DD')
+            due_date: due_date.toLocaleString()
           });
         }
       }
-      
     });
 
 
