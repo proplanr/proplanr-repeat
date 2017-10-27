@@ -221,7 +221,7 @@
       },
       
       saveRepeat: function(event) {
-        console.log('saveRepeat', this.repeatData)
+        // console.log('saveRepeat', this.repeatData)
         this.fire('saveRepeat',this.repeatData);
       },
       
@@ -230,15 +230,23 @@
         this.resetRepeatForm();
       },
       
+      /* repeatData Object: title, repeat_frequence, repeat_every, start_on, ends, end_on, after_occurrences
+        */
       resetRepeatForm: function(event) {
         console.log('resetRepeatForm:', event);
-        
+        this.set('repeatData.title', "");
+        this.set('repeatData.repeat_frequence', "");
+        this.set('repeatData.repeat_every', 1);
+        this.set('repeatData.start_on', "");
+        this.set('repeatData.ends', "");
+        this.set('repeatData.end_on', "");
+        this.set('repeatData.after_occurrences', 1);
       },
 
       onSelectedEnds: function(event) {
         this.async(function() {
-          console.log('onSelectedType',this.repeatData.ends);
-          console.log("disabled", this.$.endOn.disabled);
+          // console.log('onSelectedType',this.repeatData.ends);
+          // console.log("disabled", this.$.endOn.disabled);
           this.textFilter = '';
           if (this.repeatData.ends === 'on') {
             this.$.endOn.disabled = false;
