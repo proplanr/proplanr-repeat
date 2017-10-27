@@ -86,8 +86,9 @@
           this.db.ref('/actions').push({
             repeat_key: repeat_key,
             title: repeat.title,
-            due_date: due_date.toLocaleString()
+            due_date: moment(due_date).format("YYYY-MM-DD")
           });
+          console.log(due_date);
         }
       }
     });
