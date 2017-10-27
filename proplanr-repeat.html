@@ -197,8 +197,8 @@
       
       ready: function(event) {
         let polymerVersion = '';
-        this.set('repeatData.after_occurrences', 1);
-        this.set('repeatData.repeat_every', 1);
+        this.set('repeatData.after_occurrences', 0);
+        this.set('repeatData.repeat_every', 0);
         if (Polymer.Element) {
           polymerVersion = '2.x';
           this.toggleClass('datePickerP2',true,this.$.startOn);
@@ -222,7 +222,18 @@
       
       saveRepeat: function(event) {
         // console.log('saveRepeat', this.repeatData)
-        this.fire('saveRepeat',this.repeatData);
+        if(this.repeatData.title === "" || this.repeatData.repeat_frequence === "" || this.repeatData.repeat_every <= 0 || this.repeatData.start_on === "" || this.repeatData.ends === "") {
+          console.log("need to fill in entire form");
+        } else {
+          if(this.repeatData.ends === "on" && !this.repeatData.end_on) {
+            console.log("need to set end date");
+          } else if (this.repeatData.ends === "after" &&      this.repeatData.after_occurrences <= 0) {
+            console.log("need to set # of occurences");
+          } else { 
+          this.fire('saveRepeat',this.repeatData);
+          console.log("saved");
+          }
+        }
       },
       
       cancelRepeat: function(event) {
@@ -236,11 +247,11 @@
         console.log('resetRepeatForm:', event);
         this.set('repeatData.title', "");
         this.set('repeatData.repeat_frequence', "");
-        this.set('repeatData.repeat_every', 1);
+        this.set('repeatData.repeat_every', 0);
         this.set('repeatData.start_on', "");
         this.set('repeatData.ends', "");
         this.set('repeatData.end_on', "");
-        this.set('repeatData.after_occurrences', 1);
+        this.set('repeatData.after_occurrences', 0);
       },
 
       onSelectedEnds: function(event) {
@@ -251,7 +262,7 @@
           if (this.repeatData.ends === 'on') {
             this.$.endOn.disabled = false;
             this.$.afterOccurrencesInput.disabled = true;
-            this.set('repeatData.after_occurrences', 1);
+            this.set('repeatData.after_occurrences', 0);
           } else if (this.repeatData.ends === 'after') {
             this.$.endOn.disabled = true;
             this.$.afterOccurrencesInput.disabled = false;
