@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <title>proplanr-repeat demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script>
+      window.Polymer = {
+        dom: 'shady',
+        lazyRegister: true
+      };
+    </script>
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="demo-selector.html">
+    <link rel="../proplanr-repeat-firebase.html">
+
+    <firebase-app
+    id="firebase"
+    name="proplanr-repeat"
+    auth-domain="proplanr-repeat.firebaseapp.com"
+    database-url="https://proplanr-repeat.firebaseio.com"
+    api-key="AIzaSyA4Aumq3MnXjuH68ZYVjCsUJpymSrbKodk">
+  </firebase-app>

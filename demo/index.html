@@ -17,7 +17,8 @@
 	<link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
 	<link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
 	<link rel="import" href="../../polymerfire/firebase-app.html">
-	<link rel="import" href="../proplanr-repeat-firebase.html">
+	<link rel="import" href="../proplanr-repeat.html">
+	<link rel="import" href="demo-selector.html">
 
 	<custom-style include="demo-pages-shared-styles">
 		<style is="custom-style" include="demo-pages-shared-styles">
@@ -28,20 +29,14 @@
 	</custom-style>
 </head>
 
-<body>
+<body unresolved>
 	<div class="vertical-section-container centered">
 		<h3>Basic proplanr-repeat demo</h3>
+		<demo-selector demo="Proplanr Repeat"></demo-selector>
+
 		<demo-snippet>
 			<template>
-				<firebase-app
-					id="firebase"
-					name="proplanr-repeat"
-					auth-domain="proplanr-repeat.firebaseapp.com"
-					database-url="https://proplanr-repeat.firebaseio.com"
-					api-key="AIzaSyA4Aumq3MnXjuH68ZYVjCsUJpymSrbKodk">
-				</firebase-app>
-
-				<proplanr-repeat-firebase></proplanr-repeat-firebase>
+				<proplanr-repeat></proplanr-repeat>
 			</template>
 		</demo-snippet>
 	</div>
