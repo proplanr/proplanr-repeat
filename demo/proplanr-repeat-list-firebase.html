@@ -11,14 +11,43 @@
         lazyRegister: true
       };
     </script>
+    <link rel="import" href="../../iron-ajax/iron-ajax.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../polymerfire/firebase.html">
+    <link rel="import" href="../../polymerfire/firebase-app.html">
+    
+    <link rel="import" href="../proplanr-repeat-list-firebase.html">
     <link rel="import" href="demo-selector.html">
-    <link rel="../proplanr-repeat-firebase.html">
+    
 
-    <firebase-app
-    id="firebase"
-    name="proplanr-repeat"
-    auth-domain="proplanr-repeat.firebaseapp.com"
-    database-url="https://proplanr-repeat.firebaseio.com"
-    api-key="AIzaSyA4Aumq3MnXjuH68ZYVjCsUJpymSrbKodk">
-  </firebase-app>
+    <custom-style include="demo-pages-shared-styles">
+        <style is="custom-style" include="demo-pages-shared-styles">
+          .vertical-section-container {
+            max-width: 720px;
+          }
+        </style>
+      </custom-style>
+  </head>
+
+  <body unresolved>
+    <div class="vertical-section-container centered">
+      <h2>Basic proplanr-repeat-list-firebase demo</h2>
+      <demo-selector demo="List Firebase"></demo-selector>
+      <demo-snippet>
+          <template>
+            <firebase-app
+            id="firebase"
+            name="proplanr-repeat"
+            auth-domain="proplanr-repeat.firebaseapp.com"
+            database-url="https://proplanr-repeat.firebaseio.com"
+            api-key="AIzaSyA4Aumq3MnXjuH68ZYVjCsUJpymSrbKodk">
+            </firebase-app>
+            <proplanr-repeat-list-firebase></proplanr-repeat-list-firebase>
+          </template>
+      </demo-snippet>
+    </div>
+  </body>
+</html>
+
+    

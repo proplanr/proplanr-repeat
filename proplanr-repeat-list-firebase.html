@@ -1,0 +1,105 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymerfire/polymerfire.html">
+<link rel="import" href="../polymerfire/firebase-query.html">
+<link rel="import" href="../polymerfire/firebase-document.html">
+<link rel="import" href="../vaadin-grid/vaadin-grid.html">
+
+<dom-module id="proplanr-repeat-list-firebase">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    
+    <!-- <firebase-document
+      id="repeatsData"
+      app-name="proplanr-repeat"
+      path="/repeats/key1"
+      data="{{repeatsData}}">
+    </firebase-document> -->
+
+    <firebase-query
+    id="query"
+    app-name="proplanr-repeat"
+    path="/repeats"
+    data="{{repeatsData}}">
+  </firebase-query>
+
+  <firebase-query
+    id="actionsData"
+    app-name="proplanr-repeat"
+    path="/actions"
+    data="{{actionsData}}">
+  </firebase-query>  
+
+    <dom-bind>
+      <template is="dom-bind">
+          <vaadin-grid data-provider="firebase">
+            <vaadin-grid-column>
+              <template class="header">Title</template>
+              <template>{{repeatsData.title}}</template>  
+            </vaadin-grid-column>
+            <vaadin-grid-column>
+              <template class="header">Repeat Frequency</template>
+              <template>{{repeatsData.repeat_frequence}}</template> 
+            </vaadin-grid-column>
+            <vaadin-grid-column>
+              <template class="header">Repeat Every</template>
+              <template>{{repeatsData.repeat_every}}</template> 
+            </vaadin-grid-column>
+            <vaadin-grid-column>
+              <template class="header">Start On</template>
+              <template>{{repeatsData.start_on}}</template> 
+            </vaadin-grid-column>
+            <vaadin-grid-column>
+              <template class="header">Ends</template>
+              <template>{{repeatsData.ends}}</template> 
+            </vaadin-grid-column>
+            <vaadin-grid-column>
+              <template class="header">After # of Ocurrences</template>
+              <template>{{repeatsData.after_ocurrences}}</template> 
+            </vaadin-grid-column>
+            <vaadin-grid-column width="50px">
+              <template class="header">Ends On</template>
+              <template>{{repeatsData.end_on}}</template> 
+            </vaadin-grid-column>
+          </vaadin-grid>
+      </template>
+    </dom-bind>
+
+  </template>
+  <script>
+      Polymer({
+        is: 'proplanr-repeat-list-firebase', 
+        properties: {
+          repeatsData: {
+            type: Array,
+            notify: true,
+            observer: 'dataChange'
+          },
+
+          actionsData: {
+            type: Object,
+            value: function() {
+            return {};
+            }
+          }
+
+        },
+
+        obervers: [
+            '_dataChange(repeatsData.splices)'
+        ],
+
+        dataChange: function(newData, oldData) {
+          console.log(newData);
+        },
+
+        ready: function(event) {
+          // this.db = this.$.repeatsData.app.database();
+          console.log("repeatsData: ", this.repeatsData);
+        },
+      });
+  </script>
+</dom-module>
