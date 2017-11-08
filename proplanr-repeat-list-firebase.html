@@ -11,73 +11,70 @@
         display: block;
       }
     </style>
-    
-    
+   
+    <!-- <firebase-document
+      id="repeatsData"
+      app-name="proplanr-repeat"
+      path="/repeats"
+      data="{{repeatsData}}">
+    </firebase-document> -->
+    <firebase-query
+      id="repeatsData"
+      app-name="proplanr-repeat"
+      order-by-child="start_on"
+      path="/repeats"
+      data="{{repeatsData}}">
+    </firebase-query>
 
-    <dom-bind>
-      <!-- <firebase-document
-        id="repeatsData"
-        app-name="proplanr-repeat"
-        path="/repeats"
-        data="{{repeatsData}}">
-      </firebase-document> -->
-      <firebase-query
-        id="repeatsData"
-        app-name="proplanr-repeat"
-        path="/repeats"
-        data="{{repeatsData}}">
-      </firebase-query>
+    <firebase-query
+      id="actionsData"
+      app-name="proplanr-repeat"
+      path="/actions"
+      data="{{actionsData}}">
+    </firebase-query>  
 
-      <firebase-query
-        id="actionsData"
-        app-name="proplanr-repeat"
-        path="/actions"
-        data="{{actionsData}}">
-      </firebase-query>  
-      <template is="dom-bind" items={{repeatsData}}>
-          <vaadin-grid>
-            <vaadin-grid-column>
-              <template class="header">Title</template>
-              <template>[[repeatsData.title]]</template>  
-            </vaadin-grid-column>
-            <vaadin-grid-column>
-              <template class="header">Repeat Frequency</template>
-              <template>{{repeatsData.repeat_frequence}}</template> 
-            </vaadin-grid-column>
-            <vaadin-grid-column>
-              <template class="header">Repeat Every</template>
-              <template>{{repeatsData.repeat_every}}</template> 
-            </vaadin-grid-column>
-            <vaadin-grid-column>
-              <template class="header">Start On</template>
-              <template>{{repeatsData.start_on}}</template> 
-            </vaadin-grid-column>
-            <vaadin-grid-column>
-              <template class="header">Ends</template>
-              <template>{{repeatsData.ends}}</template> 
-            </vaadin-grid-column>
-            <vaadin-grid-column>
-              <template class="header">After # of Ocurrences</template>
-              <template>{{repeatsData.after_ocurrences}}</template> 
-            </vaadin-grid-column>
-            <vaadin-grid-column width="50px">
-              <template class="header">Ends On</template>
-              <template>{{repeatsData.end_on}}</template> 
-            </vaadin-grid-column>
-          </vaadin-grid>
-      </template>
-    </dom-bind>
-
+    <vaadin-grid items="{{repeatsData}}" style="height: auto">
+      
+      <vaadin-grid-column flex-grow="3">
+        <template class="header">Title</template>
+        <template>[[item.title]]</template>  
+      </vaadin-grid-column>
+      <vaadin-grid-column>
+        <template class="header">Repeat Frequency</template>
+        <template>{{item.repeat_frequence}}</template> 
+      </vaadin-grid-column>
+      <vaadin-grid-column>
+        <template class="header">Repeat Every</template>
+        <template>{{item.repeat_every}}</template> 
+      </vaadin-grid-column>
+      <vaadin-grid-column>
+        <template class="header">Start On</template>
+        <template>{{item.start_on}}</template> 
+      </vaadin-grid-column>
+      <vaadin-grid-column>
+        <template class="header">Ends</template>
+        <template>{{item.ends}}</template> 
+      </vaadin-grid-column>
+      <vaadin-grid-column>
+        <template class="header">After # of Ocurrences</template>
+        <template>{{item.after_occurrences}}</template> 
+      </vaadin-grid-column>
+      <vaadin-grid-column width="50px">
+        <template class="header">Ends On</template>
+        <template>{{item.end_on}}</template> 
+      </vaadin-grid-column>
+    </vaadin-grid>
   </template>
+    
   <script>
       Polymer({
         is: 'proplanr-repeat-list-firebase', 
         properties: {
-          repeatsData: {
-            type: Array,
-            notify: true,
-            // observer: 'dataChange'
-          },
+          // repeatsData: {
+          //   type: Array,
+          //   notify: true,
+          //   // observer: 'dataChange'
+          // },
 
           actionsData: {
             type: Array,
@@ -101,8 +98,11 @@
 
         ready: function(event) {
           // this.db = this.$.repeatsData.app.database();
-          console.log("repeatsData: ", this.repeatsData);
-          console.log("actionsData: ", this.actionsData);
+          this.async(function() {
+            console.log("repeatsData: ", this.repeatsData);
+            console.log("actionsData: ", this.actionsData);
+          },1000);
+          
         }
 
       });
