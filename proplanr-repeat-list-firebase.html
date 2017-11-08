@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../polymerfire/polymerfire.html">
 <link rel="import" href="../polymerfire/firebase-query.html">
 <link rel="import" href="../polymerfire/firebase-document.html">
@@ -6,9 +7,55 @@
 
 <dom-module id="proplanr-repeat-list-firebase">
   <template>
+    <style include="iron-flex iron-flex-alignment iron-flex-factors iron-positioning"></style>      
     <style>
       :host {
         display: block;
+      }
+      .details {
+        height: auto;
+        min-height: 300px;
+        max-width: 550px;
+        padding: 0;
+        margin: 10px;
+        overflow-y: auto;
+        border: 1px solid #bbdefb;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14);
+        font-size: 12px;
+      }
+      .rowHeader {
+        height: 33px;
+        width: 100%;
+        margin-top: 1px;
+        margin-bottom: 0;
+        padding-top: 3px;
+        font-weight: 500;
+        font-size: 13px;
+        /* border: 1px solid #f5f5f5; */
+        border-bottom: 1px solid #2196f3;
+        /* border-left: 1px solid #2196f3;
+        border-right: 1px solid #2196f3; */
+        background-color: #e3f2fd;
+      }
+      .rowMaterial {
+        min-height: 24px;
+        /* margin-top: -1px; */
+        padding-top: 1px;
+        padding-bottom: 1px;
+        padding-left: 3px;
+        padding-right: 5px;
+        font-weight: normal;
+        border-bottom: 1px solid #bbdefb; 
+      }
+      .headerColumn {
+        height: 24px;
+        white-space: nowrap;
+      }
+      .title, .dueDate {
+        margin-right: 20px 
+      }
+      .title {
+        width: 150px;
       }
     </style>
    
@@ -19,7 +66,7 @@
       data="{{repeatsData}}">
     </firebase-document> -->
     <firebase-query
-      id="repeatsData"
+      id="qryRepeatsData"
       app-name="proplanr-repeat"
       order-by-child="start_on"
       path="/repeats"
@@ -27,14 +74,29 @@
     </firebase-query>
 
     <firebase-query
-      id="actionsData"
+      id="qryActionsData"
+      order-by-child="repeat_key"
       app-name="proplanr-repeat"
-      path="/actions"
       data="{{actionsData}}">
     </firebase-query>  
 
-    <vaadin-grid items="{{repeatsData}}" style="height: auto">
-      
+    <vaadin-grid id="repeatsGrid" items="{{repeatsData}}" style="height: auto" active-item="{{activeItem}}" on-active-item-changed="_onActiveItemChanged">
+
+      <template class="row-details">
+        <div class="details layout vertical start">
+          <div class="layout horizontal center rowHeader">
+            <div class="headerColumn title" hidden$="{{narrow}}">Title</div>
+            <div class="headerColumn dueDate">Due Date</div>
+          </div>
+          <template is="dom-repeat" id="materialsSelectedListDR" items="{{actionsData}}" as="action" >
+            <div class="layout horizontal center rowMaterial">
+              <div class="title" hidden$="{{narrow}}">{{action.title}}</div>
+              <div class="dueDate">{{action.due_date}}</div>
+            </div>
+          </template>
+        </div>
+      </template>
+
       <vaadin-grid-column flex-grow="3">
         <template class="header">Title</template>
         <template>[[item.title]]</template>  
@@ -63,7 +125,7 @@
         <template class="header">Ends On</template>
         <template>{{item.end_on}}</template> 
       </vaadin-grid-column>
-    </vaadin-grid>
+
   </template>
     
   <script>
@@ -102,8 +164,25 @@
             console.log("repeatsData: ", this.repeatsData);
             console.log("actionsData: ", this.actionsData);
           },1000);
-          
-        }
+        },
+
+        _onActiveItemChanged: function(item,detail) {
+          if (item.detail.value) { // expand receive details
+            this.$.repeatsGrid.expandedItems = [item.detail.value];
+            this.$.repeatsGrid.selectedItems = item ? [item] : [];
+            let data = item.detail.value;
+            let key = data.$key || '';
+            // console.log('_onActiveItemChanged',key,data); 
+            this.$.qryActionsData.equalTo = key;
+            this.$.qryActionsData.path = '/actions';
+          } else if (this.mode && !item.detail.value) { // collapse receive details
+            this.$.repeatsGrid.expandedItems = [item.detail.value];
+            this.$.repeatsGrid.selectedItems = item ? [item] : [];
+          } else { // first load do nothing
+            // console.log('_onActiveItemChanged else');        
+          }
+        },
+
 
       });
   </script>
