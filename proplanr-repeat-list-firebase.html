@@ -80,7 +80,10 @@
       order-by-child="repeat_key"
       app-name="proplanr-repeat"
       data="{{actionsData}}">
-    </firebase-query>  
+    </firebase-query>
+    
+    <!-- <proplanr-repeat layout="horizontal"></proplanr-repeat> -->
+
 
     <vaadin-grid id="repeatsGrid" items="{{repeatsData}}" style="height: auto" active-item="{{activeItem}}" on-active-item-changed="_onActiveItemChanged">
 
@@ -195,7 +198,12 @@
           //
          let data = event.model.__data__.item;
          console.log('deleteRepeat:',data,event);
+         // loop to delete action
+
+         // delete repeat
           //  this.db.ref('/repeats/' + data.$key).remove();        
+
+          
 
         },
 
