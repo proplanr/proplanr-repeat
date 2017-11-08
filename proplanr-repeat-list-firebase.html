@@ -12,33 +12,33 @@
       }
     </style>
     
-    <!-- <firebase-document
-      id="repeatsData"
-      app-name="proplanr-repeat"
-      path="/repeats/key1"
-      data="{{repeatsData}}">
-    </firebase-document> -->
-
-    <firebase-query
-    id="query"
-    app-name="proplanr-repeat"
-    path="/repeats"
-    data="{{repeatsData}}">
-  </firebase-query>
-
-  <firebase-query
-    id="actionsData"
-    app-name="proplanr-repeat"
-    path="/actions"
-    data="{{actionsData}}">
-  </firebase-query>  
+    
 
     <dom-bind>
-      <template is="dom-bind">
-          <vaadin-grid data-provider="firebase">
+      <!-- <firebase-document
+        id="repeatsData"
+        app-name="proplanr-repeat"
+        path="/repeats"
+        data="{{repeatsData}}">
+      </firebase-document> -->
+      <firebase-query
+        id="repeatsData"
+        app-name="proplanr-repeat"
+        path="/repeats"
+        data="{{repeatsData}}">
+      </firebase-query>
+
+      <firebase-query
+        id="actionsData"
+        app-name="proplanr-repeat"
+        path="/actions"
+        data="{{actionsData}}">
+      </firebase-query>  
+      <template is="dom-bind" items={{repeatsData}}>
+          <vaadin-grid>
             <vaadin-grid-column>
               <template class="header">Title</template>
-              <template>{{repeatsData.title}}</template>  
+              <template>[[repeatsData.title]]</template>  
             </vaadin-grid-column>
             <vaadin-grid-column>
               <template class="header">Repeat Frequency</template>
@@ -76,30 +76,35 @@
           repeatsData: {
             type: Array,
             notify: true,
-            observer: 'dataChange'
+            // observer: 'dataChange'
           },
 
           actionsData: {
-            type: Object,
-            value: function() {
-            return {};
+            type: Array,
+            notify: true,
+            // observer: 'actionsChange'
             }
-          }
-
         },
 
-        obervers: [
-            '_dataChange(repeatsData.splices)'
-        ],
+        // observers: [
+        //     '_dataChange(repeatsData.splices)',
+        //     '_actionsChange(actionsData.splices)'
+        // ],
 
-        dataChange: function(newData, oldData) {
-          console.log(newData);
-        },
+        // _dataChange: function(repeatsData, oldData) {
+        //   console.log("dataChange: ", repeatsData);
+        // },
+
+        // _actionsChange: function(newData, oldData) {
+        //   console.log("actionsChange: ", newData)
+        // },
 
         ready: function(event) {
           // this.db = this.$.repeatsData.app.database();
           console.log("repeatsData: ", this.repeatsData);
-        },
+          console.log("actionsData: ", this.actionsData);
+        }
+
       });
   </script>
 </dom-module>

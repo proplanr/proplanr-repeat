@@ -39,8 +39,7 @@
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#1 - 2",
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#1 - 2",
-    "web-component-tester": "^6.0.0",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+    "web-component-tester": "^6.0.0"
   },
   "variants": {
     "1.x": {
@@ -58,7 +57,7 @@
         "paper-radio-group": "PolymerElements/paper-radio-group#^1.2.0",
         "polymerfire": "firebase/polymerfire#^0.11.0",
         "moment-element": "abdonrd/moment-element#^1.0.0",
-        "vaadin-grid": "vaadin/vaadin-grid#^2.0.2"
+        "vaadin-grid": "vaadin/vaadin-grid#^2.0.0"
       },
       "devDependencies": {
         "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
