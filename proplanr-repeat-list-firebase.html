@@ -5,6 +5,8 @@
 <link rel="import" href="../polymerfire/firebase-document.html">
 <link rel="import" href="../vaadin-grid/vaadin-grid.html">
 
+<link rel="import" href="proplanr-icons.html">
+
 <dom-module id="proplanr-repeat-list-firebase">
   <template>
     <style include="iron-flex iron-flex-alignment iron-flex-factors iron-positioning"></style>      
@@ -125,7 +127,13 @@
         <template class="header">Ends On</template>
         <template>{{item.end_on}}</template> 
       </vaadin-grid-column>
-
+      <vaadin-grid-column width="20px" class="centerColumn">
+        <template class="header"></template>
+        <template>
+           <paper-icon-button class="deleteButton" icon="proplanr-icons:delete" on-tap="deleteRepeat"> 
+        </template>
+      </vaadin-grid-column>
+    </vaadin-grid>
   </template>
     
   <script>
@@ -183,6 +191,13 @@
           }
         },
 
+        deleteRepeat: function(event) {
+          //
+         let data = event.model.__data__.item;
+         console.log('deleteRepeat:',data,event);
+          //  this.db.ref('/repeats/' + data.$key).remove();        
+
+        },
 
       });
   </script>
