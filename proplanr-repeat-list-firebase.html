@@ -4,7 +4,6 @@
 <link rel="import" href="../polymerfire/firebase-query.html">
 <link rel="import" href="../polymerfire/firebase-document.html">
 <link rel="import" href="../vaadin-grid/vaadin-grid.html">
-
 <link rel="import" href="proplanr-icons.html">
 
 <dom-module id="proplanr-repeat-list-firebase">
@@ -107,7 +106,7 @@
         <template>[[item.title]]</template>  
       </vaadin-grid-column>
       <vaadin-grid-column>
-        <template class="header">Repeat Frequency</template>
+        <template class="header">Repeat Frequ.</template>
         <template>{{item.repeat_frequence}}</template> 
       </vaadin-grid-column>
       <vaadin-grid-column>
@@ -118,22 +117,28 @@
         <template class="header">Start On</template>
         <template>{{item.start_on}}</template> 
       </vaadin-grid-column>
-      <vaadin-grid-column>
+      <vaadin-grid-column width="40px">
         <template class="header">Ends</template>
         <template>{{item.ends}}</template> 
       </vaadin-grid-column>
-      <vaadin-grid-column>
-        <template class="header">After # of Ocurrences</template>
+      <vaadin-grid-column width="50px">
+        <template class="header"># of Ocurr.</template>
         <template>{{item.after_occurrences}}</template> 
       </vaadin-grid-column>
-      <vaadin-grid-column width="50px">
+      <vaadin-grid-column width="58px">
         <template class="header">Ends On</template>
         <template>{{item.end_on}}</template> 
       </vaadin-grid-column>
       <vaadin-grid-column width="20px" class="centerColumn">
         <template class="header"></template>
         <template>
-           <paper-icon-button class="deleteButton" icon="proplanr-icons:delete" on-tap="deleteRepeat"> 
+           <paper-icon-button class="deleteButton" icon="proplanr-icons:delete" on-tap="deleteRepeat">
+        </template>
+      </vaadin-grid-column>
+      <vaadin-grid-column width="20px" class="centerColumn">
+        <template class="header"></template>
+        <template>
+           <paper-icon-button class="editButton" icon="proplanr-icons:edit" on-tap="editRepeat"> 
         </template>
       </vaadin-grid-column>
     </vaadin-grid>
@@ -152,28 +157,15 @@
           actionsData: {
             type: Array,
             notify: true,
-            // observer: 'actionsChange'
             }
         },
 
-        // observers: [
-        //     '_dataChange(repeatsData.splices)',
-        //     '_actionsChange(actionsData.splices)'
-        // ],
-
-        // _dataChange: function(repeatsData, oldData) {
-        //   console.log("dataChange: ", repeatsData);
-        // },
-
-        // _actionsChange: function(newData, oldData) {
-        //   console.log("actionsChange: ", newData)
-        // },
-
         ready: function(event) {
+          this.db = this.$.qryActionsData.app.database();
+          console.log('proplanr-repeat-firebase',this.db);
           // this.db = this.$.repeatsData.app.database();
           this.async(function() {
             console.log("repeatsData: ", this.repeatsData);
-            console.log("actionsData: ", this.actionsData);
           },1000);
         },
 
@@ -183,7 +175,7 @@
             this.$.repeatsGrid.selectedItems = item ? [item] : [];
             let data = item.detail.value;
             let key = data.$key || '';
-            // console.log('_onActiveItemChanged',key,data); 
+            console.log('_onActiveItemChanged', detail); 
             this.$.qryActionsData.equalTo = key;
             this.$.qryActionsData.path = '/actions';
           } else if (this.mode && !item.detail.value) { // collapse receive details
@@ -195,18 +187,15 @@
         },
 
         deleteRepeat: function(event) {
-          //
-         let data = event.model.__data__.item;
-         console.log('deleteRepeat:',data,event);
-         // loop to delete action
-
-         // delete repeat
-          //  this.db.ref('/repeats/' + data.$key).remove();        
-
-          
-
-        },
-
+          let data = event.model.__data__.item;
+          let key = data.$key || '';
+          this.db.ref('/actions').orderByChild("repeat_key").equalTo(key).on('value', function(snapshot) {
+            snapshot.ref.remove();
+          }); 
+          // delete repeat
+          this.db.ref('/repeats/' + key).remove();    
+        }
+        
       });
   </script>
 </dom-module>
