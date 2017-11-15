@@ -81,7 +81,7 @@
         width: 185px;
       }
       
-      #endOn {
+      .endOn {
         position:relative;
         margin-top: -5px;
         /* left: 70px; */
@@ -137,11 +137,13 @@
 
       /* polymer 2 styles */
       .datePickerP2 {
-        margin-top: 4px;
+        margin-top: 35px;
+        margin-left: 8px;
+        text-align: center;
       }
 
       .endOnP2 {
-        margin-top: -150px;
+        margin-top: 25px;
       }
 
       .afterContainerP2  {
@@ -163,7 +165,7 @@
                 <paper-item value="days">Daily</paper-item>
                 <paper-item value="weeks">Weekly</paper-item>
                 <paper-item value="months">Monthly</paper-item>
-                < paper-item value="quarters">Quarterly</paper-item>
+                <paper-item value="quarters">Quarterly</paper-item>
                 <paper-item value="years">Yearly</paper-item>
               </paper-listbox>
             </paper-dropdown-menu>
@@ -190,7 +192,7 @@
           </div>
 
           <div class="flex-item btmRow" hidden$="{{hideEndOn}}">
-            <vaadin-date-picker id="endOn" value="{{repeatData.end_on}}" class$="endOnP2" min="{{repeatData.start_on}}" disabled></vaadin-date-picker>
+            <vaadin-date-picker class="endOn" value="{{repeatData.end_on}}" class$="endOnP2" min="{{repeatData.start_on}}" disabled></vaadin-date-picker>
           </div>
 
           <div class="flex-item btmRow" hidden$="{{hideAfter}}">
