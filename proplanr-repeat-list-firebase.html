@@ -183,7 +183,7 @@
         deleteRepeat: function(event) {
           let data = event.model.__data__.item;
           let key = data.$key || '';
-          this.db.ref('/actions').orderByChild("repeat_key").equalTo(key).on('value', function(snapshot) {
+          this.db.ref('/actions').orderByChild("repeat_key").equalTo(key).on('child_added', function(snapshot) {
             snapshot.ref.remove();
           }); 
           // delete repeat
