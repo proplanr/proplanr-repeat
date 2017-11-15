@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../polymerfire/firebase-document.html">
 <link rel="import" href="../polymerfire/firebase-query.html">
@@ -80,6 +81,15 @@
     
     <proplanr-repeat-horizontal id="repeatForm"></proplanr-repeat-horizontal>
 
+    <paper-dialog id="dialogDelete">
+      <h2 id="dialogHeader">Delete Repeat?</h2>
+      <div id="dialogBody">{{dialogBodyValue}}<br>{{dialogBodyValue2}}</div>
+      <div class="buttons">
+        <paper-button dialog-dismiss autofocus>Cancel</paper-button>
+        <paper-button dialog-confirm on-tap="deleteRepeat">Ok</paper-button>
+      </div>
+    </paper-dialog>
+
     <vaadin-grid id="repeatsGrid" items="{{repeatsData}}" style="height: auto" active-item="{{activeItem}}" on-active-item-changed="_onActiveItemChanged">
 
       <template class="row-details">
@@ -128,7 +138,7 @@
       <vaadin-grid-column width="20px" class="centerColumn">
         <template class="header"></template>
         <template>
-           <paper-icon-button class="deleteButton" icon="proplanr-icons:delete" on-tap="deleteRepeat">
+           <paper-icon-button class="deleteButton" icon="proplanr-icons:delete" on-tap="promptDelete">
         </template>
       </vaadin-grid-column>
       <vaadin-grid-column width="20px" class="centerColumn">
@@ -147,7 +157,6 @@
           // repeatsData: {
           //   type: Array,
           //   notify: true,
-          //   // observer: 'dataChange'
           // },
 
           actionsData: {
@@ -182,22 +191,56 @@
         },
 
         deleteRepeat: function(event) {
-          let data = event.model.__data__.item;
-          let key = data.$key || '';
+          console.log('deleteRepeat', event);
+          let data = "";
+          if(Polymer.Element) {
+            // polymer 2.x
+            data = event.target.__data.item;
+          } else {
+            data = event.target.__data__.item;
+          }
+          console.log(data);          
+          // let key = this.data.$key || '';
           this.db.ref('/actions').orderByChild("repeat_key").equalTo(key).on('child_added', function(snapshot) {
             snapshot.ref.remove();
-          }); 
+          });
           // delete repeat
           this.db.ref('/repeats/' + key).remove();    
         },
 
         editRepeat: function(event) {
-          let data = event.model.__data__.item;
+          let data = "";
+          if(Polymer.Element) {
+            // polymer 2.x
+            data = event.model.__data.item;
+          } else {
+            data = event.model.__data__.item;
+          }
           this.$.repeatForm.repeatData = '';
           this.$.repeatForm.repeatData = data;
           // console.log('editRepeat:',this.$.repeatForm.repeatData);
         },
         
+        promptDelete: function(event) {
+          let data = "";
+          if(Polymer.Element) {
+            // polymer 2.x
+            console.log('promptDelete',event.model);
+            data = event.model.__data.item;
+          } else {
+            data = event.model.__data__.item;
+          }
+          this.dialogBodyValue = data.title;
+          this.dialogBodyValue2 = 'This will delete repeat and all actions related.';
+          let key = data.$key;
+          this.$.dialogDelete.open(key);
+        },
+
+        // deleteOk: function(event) {
+        //   console.log("deleteOk", event);
+        //   this.deleteRepeat(event);
+        // }
+
       });
   </script>
 </dom-module>

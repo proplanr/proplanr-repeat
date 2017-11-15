@@ -238,12 +238,6 @@
             return {};
           }
         },
-        layout: {
-          type: String,
-          value: 'Vertical',
-          notify: true,
-          observer: 'layoutChange'
-        },
         today: {
           type: String
         },
@@ -341,22 +335,18 @@
         },1);
       },
 
-      layoutChange: function(layout) {
-        console.log('layoutChange:',layout);
+      promptSave: function(event) {
+        // console.log('promptSave',event);
+        // this.$.dialogHeader.innerHTML = "Save Repeat?"
+        this.dialogBodyValue = this.repeatData.title;
+        this.dialogBodyValue2 = 'This will delete all previoius actions and recreate them.';
+        this.$.dialogSave.open();
       },
 
-    promptSave: function(event) {
-      // console.log('promptSave',event);
-      this.$.dialogHeader.innerHTML = "Save Repeat?"
-      this.dialogBodyValue = this.repeatData.title;
-      this.dialogBodyValue2 = 'This will delete all previoius actions and recreate them.';
-      this.$.dialogSave.open();
-    },
-
-    saveOk: function(event) {
-      console.log('saveOk:');
-      this.saveRepeat();
-    },
+      saveOk: function(event) {
+        console.log('saveOk:');
+        this.saveRepeat();
+      }
       
     });
   </script>
