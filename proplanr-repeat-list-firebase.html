@@ -161,8 +161,13 @@
 
           actionsData: {
             type: Array,
-            notify: true,
-            }
+            notify: true
+          },
+
+          repeatKey: {
+            type: String,
+            notify: true
+          }
         },
 
         ready: function(event) {
@@ -192,15 +197,15 @@
 
         deleteRepeat: function(event) {
           console.log('deleteRepeat', event);
-          let data = "";
-          if(Polymer.Element) {
-            // polymer 2.x
-            data = event.target.__data.item;
-          } else {
-            data = event.target.__data__.item;
-          }
-          console.log(data);          
-          // let key = this.data.$key || '';
+          // let data = "";
+          // if(Polymer.Element) {
+          //   // polymer 2.x
+          //   data = event.target.__data.item;
+          // } else {
+          //   data = event.target.__data__.item;
+          // }
+          // console.log(data);          
+          let key = this.repeatKey || '';
           this.db.ref('/actions').orderByChild("repeat_key").equalTo(key).on('child_added', function(snapshot) {
             snapshot.ref.remove();
           });
@@ -232,8 +237,9 @@
           }
           this.dialogBodyValue = data.title;
           this.dialogBodyValue2 = 'This will delete repeat and all actions related.';
-          let key = data.$key;
-          this.$.dialogDelete.open(key);
+          this.repeatKey = '';
+          this.repeatKey = data.$key;
+          this.$.dialogDelete.open();
         },
 
         // deleteOk: function(event) {
