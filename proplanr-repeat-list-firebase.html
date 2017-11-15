@@ -1,12 +1,13 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../polymerfire/polymerfire.html">
-<link rel="import" href="../polymerfire/firebase-query.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../polymerfire/firebase-document.html">
+<link rel="import" href="../polymerfire/firebase-query.html">
+<link rel="import" href="../polymerfire/polymerfire.html">
 <link rel="import" href="../vaadin-grid/vaadin-grid.html">
+
 <link rel="import" href="proplanr-icons.html">
 <link rel="import" href="proplanr-repeat-horizontal.html">
-<link rel="import" href="../paper-icon-button/paper-icon-button.html">
 
 <dom-module id="proplanr-repeat-list-firebase">
   <template>
@@ -77,8 +78,7 @@
       data="{{actionsData}}">
     </firebase-query>
     
-    <proplanr-repeat-horizontal></proplanr-repeat-horizontal>
-
+    <proplanr-repeat-horizontal id="repeatForm"></proplanr-repeat-horizontal>
 
     <vaadin-grid id="repeatsGrid" items="{{repeatsData}}" style="height: auto" active-item="{{activeItem}}" on-active-item-changed="_onActiveItemChanged">
 
@@ -173,7 +173,7 @@
             console.log('_onActiveItemChanged', detail); 
             this.$.qryActionsData.equalTo = key;
             this.$.qryActionsData.path = '/actions';
-          } else if (this.mode && !item.detail.value) { // collapse receive details
+          } else if (!item.detail.value) { // collapse receive details
             this.$.repeatsGrid.expandedItems = [item.detail.value];
             this.$.repeatsGrid.selectedItems = item ? [item] : [];
           } else { // first load do nothing
@@ -189,7 +189,14 @@
           }); 
           // delete repeat
           this.db.ref('/repeats/' + key).remove();    
-        }
+        },
+
+        editRepeat: function(event) {
+          let data = event.model.__data__.item;
+          this.$.repeatForm.repeatData = '';
+          this.$.repeatForm.repeatData = data;
+          // console.log('editRepeat:',this.$.repeatForm.repeatData);
+        },
         
       });
   </script>
