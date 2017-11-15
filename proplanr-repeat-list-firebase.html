@@ -5,6 +5,7 @@
 <link rel="import" href="../polymerfire/firebase-document.html">
 <link rel="import" href="../vaadin-grid/vaadin-grid.html">
 <link rel="import" href="proplanr-icons.html">
+<link rel="import" href="proplanr-repeat-horizontal.html">
 
 <dom-module id="proplanr-repeat-list-firebase">
   <template>
@@ -59,13 +60,7 @@
         width: 150px;
       }
     </style>
-   
-    <!-- <firebase-document
-      id="repeatsData"
-      app-name="proplanr-repeat"
-      path="/repeats"
-      data="{{repeatsData}}">
-    </firebase-document> -->
+
     <firebase-query
       id="qryRepeatsData"
       app-name="proplanr-repeat"
@@ -81,7 +76,7 @@
       data="{{actionsData}}">
     </firebase-query>
     
-    <!-- <proplanr-repeat layout="horizontal"></proplanr-repeat> -->
+    <proplanr-repeat-horizontal></proplanr-repeat-horizontal>
 
 
     <vaadin-grid id="repeatsGrid" items="{{repeatsData}}" style="height: auto" active-item="{{activeItem}}" on-active-item-changed="_onActiveItemChanged">
@@ -163,7 +158,6 @@
         ready: function(event) {
           this.db = this.$.qryActionsData.app.database();
           console.log('proplanr-repeat-firebase',this.db);
-          // this.db = this.$.repeatsData.app.database();
           this.async(function() {
             console.log("repeatsData: ", this.repeatsData);
           },1000);
@@ -182,7 +176,7 @@
             this.$.repeatsGrid.expandedItems = [item.detail.value];
             this.$.repeatsGrid.selectedItems = item ? [item] : [];
           } else { // first load do nothing
-            // console.log('_onActiveItemChanged else');        
+     
           }
         },
 

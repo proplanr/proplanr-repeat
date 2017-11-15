@@ -55,7 +55,6 @@
           let repeat_key = snapshot.key;
           let repeat = data.detail;
           // add actions for number occurrencies or end date
-
           if (repeat.ends === 'after') {
             let every = repeat.repeat_every;
             this.saveActions(every,repeat,repeat_key);
@@ -80,7 +79,6 @@
           if (i > 0) {
             due_date = moment(due_date).add(every, repeat.repeat_frequence);
           }
-          // console.log(repeat.title, due_date.toLocaleString(), repeat_key)
           this.db.ref('/actions').push({
             repeat_key: repeat_key,
             title: repeat.title,

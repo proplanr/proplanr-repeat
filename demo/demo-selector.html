@@ -17,6 +17,7 @@
       <a href="index.html"><paper-radio-button name="Proplanr Repeat" id="proplanr">Proplanr Repeat</paper-radio-button></a>
       <a href="proplanr-repeat-firebase.html"><paper-radio-button name="Firebase" id="firebase">Proplanr Repeat Firebase</paper-radio-button></a>
       <a href="proplanr-repeat-list-firebase.html"><paper-radio-button name="List Firebase" id="listFirebase">Proplanr Repeat List Firebase</paper-radio-button></a>
+      <a href="proplanr-repeat-horizontal.html"><paper-radio-button name="Horizontal" id="horizontal">Proplanr Repeat Horizontal</paper-radio-button></a>
     </paper-radio-group>
   </template>
 
@@ -37,8 +38,10 @@
           this.$.proplanr.checked = true;
         } else if(this.demo === "Firebase") {
           this.$.firebase.checked = true;
-        } else {
+        } else if(this.demo === "List Firebase"){
           this.$.listFirebase.checked = true;
+        } else {
+          this.$.horizontal.checked = true;
         }
       }
     });

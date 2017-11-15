@@ -35,15 +35,12 @@
   @demo demo/index.html
 -->
 
-<dom-module id="proplanr-repeat">
+<dom-module id="proplanr-repeat-horizontal">
   <template>
     <style is="custom-style" include="iron-flex iron-flex-alignment">
       :host {
         --calculated-proplanr-repeat-height: var(--proplanr-repeat-height, auto);
         display: block;
-        height: 460px;
-        width: 300px;
-        padding: 20px;
         border: 1px solid gray;
       }
 
@@ -53,57 +50,89 @@
       
       .number {
         width: 50px;
+        text-align: center;
+        padding-top: 5px;
       }
       
       .label {
-        padding-right: 5px;
         font-size: 18px;
       }
       
       .endLabel {
         padding-left: 5px;
+        padding-top: 7px;
         font-size: 18px;
         
       }
       
-      paper-input {
+      /* paper-input {
         margin-top: -15px;
         text-align: center;
-      }
+      } */
       
       vaadin-date-picker {
         width: 175px;
-        margin-top: -25px;
+        margin-top: 5px;
         text-align: center;
       }
 
       #titleInput {
-        text-align: left;       
+        text-align: left;
+        width: 185px;
       }
       
       #endOn {
         position:relative;
-        margin-top: -33px;
-        left: 70px;
+        margin-top: -5px;
+        /* left: 70px; */
       }
 
-      #afterContainer {
+      #afterOccurrencesInput {
+        margin-top: -10px;
+      }
+
+      /* #afterContainer {
         position:relative;
         margin-top: 3px;
         left: 80px;
-      }
+      } */
 
       paper-radio-group {
-        position: absolute;
-        margin-top: -15px;
+        /* position: absolute; */
+        margin-top: 7px;
+      }
+
+      #endsGroup {
+        margin-top: 7px;
       }
       
       #buttons {
         float: right;
+        margin-top: 14px;
       }
       
       paper-button {
         margin: 5px 0px 5px 10px;
+      }
+
+      .flex-container {
+        display: flex; 
+      }
+
+      .center {
+        justify-content: center;
+      }
+
+      .space-between { 
+        justify-content: space-between; 
+      }
+
+      .topRow {
+        padding: 15px;
+      }
+
+      .btmRow {
+        padding: 15px;
       }
 
       /* polymer 2 styles */
@@ -123,45 +152,62 @@
     <h2>ProPlanr-repeat default: [[repeats]]!</h2>
     <iron-form>
       <form id="repeatForm" method="get" action="/form/handler">
-        <paper-input id="titleInput" value="{{repeatData.title}}" label="Title"></paper-input> 
-        <paper-dropdown-menu label="Repeat">
-          <paper-listbox class="dropdown-content" slot="dropdown-content" selected="{{repeatData.repeat_frequence}}"  attr-for-selected="value">
-            <paper-item value="days">Daily</paper-item>
-            <paper-item value="weeks">Weekly</paper-item>
-            <paper-item value="months">Monthly</paper-item>
-            <paper-item value="quarters">Quarterly</paper-item>
-            <paper-item value="years">Yearly</paper-item>
-          </paper-listbox>
-        </paper-dropdown-menu>
+        <div class="flex-container center">
+          <div class="flex-item topRow">
+            <paper-input id="titleInput" value="{{repeatData.title}}" label="Title"></paper-input>
+          </div>
+          
+          <div class="flex-item topRow">
+            <paper-dropdown-menu label="Repeat" id="repeatDrop">
+              <paper-listbox class="dropdown-content" slot="dropdown-content" selected="{{repeatData.repeat_frequence}}"  attr-for-selected="value">
+                <paper-item value="days">Daily</paper-item>
+                <paper-item value="weeks">Weekly</paper-item>
+                <paper-item value="months">Monthly</paper-item>
+                < paper-item value="quarters">Quarterly</paper-item>
+                <paper-item value="years">Yearly</paper-item>
+              </paper-listbox>
+            </paper-dropdown-menu>
+          </div>
         
-        <div class="layout horizontal center">
-          <p class="label">Repeat Every: </p><paper-input class="number" value="{{repeatData.repeat_every}}" type="number" no-float></paper-input> 
-          <p class="endLabel">{{repeatData.repeat_frequence}}</p>
+          <div class="flex-item topRow layout horizontal">
+            <p class="label">Repeat Every: </p><paper-input class="number" value="{{repeatData.repeat_every}}" type="number" no-float></paper-input> 
+            <p class="endLabel">{{repeatData.repeat_frequence}}</p>
+          </div>
+      
+          <div class="flex-item topRow layout horizontal">
+            <p class="label" id="startOn">Start On:</p>
+            <vaadin-date-picker id="startOn" value="{{repeatData.start_on}}" class$="datePickerP2" min="{{today}}"></vaadin-date-picker>
+          </div>
         </div>
         
-        <div class="layout horizontal center">
-          <p class="label">Start On:</p>
-          <vaadin-date-picker id="startOn" value="{{repeatData.start_on}}" class$="datePickerP2" min="{{today}}"></vaadin-date-picker>
-        </div>
+        <div class="flex-container space-between">
+          <div class="flex-item btmRow layout horizontal" id="endsGroup">
+            <p class="label">Ends: </p>
+            <paper-radio-group selected="{{repeatData.ends}}"  on-iron-activate="onSelectedEnds">
+              <paper-radio-button name="on" class="label">On</paper-radio-button>
+              <paper-radio-button name="after" class="label">After</paper-radio-button>
+            </paper-radio-group>
+          </div>
+
+          <div class="flex-item btmRow" hidden$="{{hideEndOn}}">
+            <vaadin-date-picker id="endOn" value="{{repeatData.end_on}}" class$="endOnP2" min="{{repeatData.start_on}}" disabled></vaadin-date-picker>
+          </div>
+
+          <div class="flex-item btmRow" hidden$="{{hideAfter}}">
+            <div id="afterContainer"  class$="afterContainerP2" class="layout horizontal">
+            <paper-input id="afterOccurrencesInput" type="number" value="{{repeatData.after_occurrences}}" class="number" disabled></paper-input>
+            <p class="endLabel">occurrences</p>
+            </div>
+          </div>
         
-        <p class="label">Ends: </p>
-        <paper-radio-group selected="{{repeatData.ends}}" class="layout vertical" on-iron-activate="onSelectedEnds">
-          <!-- <paper-radio-button name="never">Never</paper-radio-button> -->
-          <paper-radio-button name="on" class="label">On</paper-radio-button>
-          <paper-radio-button name="after" class="label">After</paper-radio-button>
-        </paper-radio-group> 
-        
-        <vaadin-date-picker id="endOn" value="{{repeatData.end_on}}" class$="endOnP2" min="{{repeatData.start_on}}" disabled></vaadin-date-picker>
-        
-        <div id="afterContainer"  class$="afterContainerP2" class="layout horizontal center">
-          <paper-input id="afterOccurrencesInput" type="number" value="{{repeatData.after_occurrences}}" class="number" disabled></paper-input>
-          <p class="endLabel">occurrences</p>
-        </div>
-        
-        <div class="layout horizontal" id="buttons">
-          <paper-button raised on-click="resetRepeatForm">RESET</paper-button>
-          <paper-button raised on-click="cancelRepeat">CANCEL</paper-button>
-          <paper-button raised on-click="saveRepeat">SAVE</paper-button>
+          <div class="flex-item btmRow">
+            <div id="buttons">
+              <paper-button raised on-click="resetRepeatForm">RESET</paper-button>
+              <paper-button raised on-click="cancelRepeat">CANCEL</paper-button>
+              <paper-button raised on-click="saveRepeat">SAVE</paper-button>
+            </div>
+          </div>
+
         </div>
       </form>
     </iron-form>
@@ -169,7 +215,7 @@
   
   <script>
     Polymer({
-      is: 'proplanr-repeat',
+      is: 'proplanr-repeat-horizontal',
       properties: {
         /* repeatData Object: title, repeat_frequence, repeat_every, start_on, ends, end_on, after_occurrences
         */
@@ -187,6 +233,14 @@
         },
         today: {
           type: String
+        },
+        hideEndOn: {
+          type: Boolean,
+          value: false
+        },
+        hideAfter: {
+          type: Boolean,
+          value: true
         }
         
       },
@@ -257,10 +311,14 @@
           if (this.repeatData.ends === 'on') {
             this.$.endOn.disabled = false;
             this.$.afterOccurrencesInput.disabled = true;
+            this.set('hideEndOn', false);
+            this.set('hideAfter', true);
             this.set('repeatData.after_occurrences', 0);
           } else if (this.repeatData.ends === 'after') {
             this.$.endOn.disabled = true;
             this.$.afterOccurrencesInput.disabled = false;
+            this.set('hideEndOn', true);
+            this.set('hideAfter', false);
             this.set('repeatData.end_on', "");
           }
         },1);
