@@ -64,8 +64,8 @@
             let calculate = end.diff(start, repeat.repeat_frequence);
             repeat.after_occurrences = calculate / repeat.repeat_every;
             this.db.ref('/repeats/' + repeat_key).update({
-              after_occurrences: calculate / repeat.repeat_every,
-            });
+              after_occurrences: Math.ceil(calculate / repeat.repeat_every,
+            )});
             this.saveActions(repeat.repeat_every, repeat, repeat_key);
           } else {
             console.log("nothing");
