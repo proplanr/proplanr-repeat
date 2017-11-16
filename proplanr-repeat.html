@@ -159,7 +159,6 @@
         </div>
         
         <div class="layout horizontal" id="buttons">
-          <paper-button raised on-click="resetRepeatForm">RESET</paper-button>
           <paper-button raised on-click="cancelRepeat">CANCEL</paper-button>
           <paper-button raised on-click="saveRepeat">SAVE</paper-button>
         </div>
@@ -235,13 +234,6 @@
       
       cancelRepeat: function(event) {
         console.log('cancelRepeat');
-        this.resetRepeatForm();
-      },
-      
-      /* repeatData Object: title, repeat_frequence, repeat_every, start_on, ends, end_on, after_occurrences
-        */
-      resetRepeatForm: function(event) {
-        console.log('resetRepeatForm:', event);
         this.set('repeatData.title', "");
         this.set('repeatData.repeat_frequence', "");
         this.set('repeatData.repeat_every', 0);
@@ -250,6 +242,9 @@
         this.set('repeatData.end_on', "");
         this.set('repeatData.after_occurrences', 0);
       },
+      
+      /* repeatData Object: title, repeat_frequence, repeat_every, start_on, ends, end_on, after_occurrences
+        */
 
       onSelectedEnds: function(event) {
         this.async(function() {

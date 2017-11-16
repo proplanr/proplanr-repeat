@@ -214,9 +214,8 @@
         
           <div class="flex-item btmRow">
             <div id="buttons">
-              <paper-button raised on-click="resetRepeatForm">RESET</paper-button>
               <paper-button raised on-click="cancelRepeat">CANCEL</paper-button>
-              <paper-button raised on-click="promptSave">SAVE</paper-button>
+              <paper-button raised on-click="promptSave">{{saveUpdate}}</paper-button>
             </div>
           </div>
 
@@ -248,6 +247,10 @@
         hideAfter: {
           type: Boolean,
           value: true
+        },
+        saveUpdate: {
+          type: String,
+          notify: true
         }
         
       },
@@ -296,13 +299,6 @@
       
       cancelRepeat: function(event) {
         console.log('cancelRepeat');
-        this.resetRepeatForm();
-      },
-      
-      /* repeatData Object: title, repeat_frequence, repeat_every, start_on, ends, end_on, after_occurrences
-        */
-      resetRepeatForm: function(event) {
-        console.log('resetRepeatForm:', event);
         this.set('repeatData.title', "");
         this.set('repeatData.repeat_frequence', "");
         this.set('repeatData.repeat_every', 0);

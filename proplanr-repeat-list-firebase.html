@@ -79,7 +79,7 @@
       data="{{actionsData}}">
     </firebase-query>
     
-    <proplanr-repeat-horizontal id="repeatForm"></proplanr-repeat-horizontal>
+    <proplanr-repeat-horizontal id="repeatForm" save-update="{{updateSave}}" hidden$="{{hideForm}}"></proplanr-repeat-horizontal>
 
     <paper-dialog id="dialogDelete">
       <h2 id="dialogHeader">Delete Repeat?</h2>
@@ -89,6 +89,8 @@
         <paper-button dialog-confirm on-tap="deleteRepeat">Ok</paper-button>
       </div>
     </paper-dialog>
+
+    <paper-fab mini icon="proplanr-icons:add" title="add"></paper-fab>
 
     <vaadin-grid id="repeatsGrid" items="{{repeatsData}}" style="height: auto" active-item="{{activeItem}}" on-active-item-changed="_onActiveItemChanged">
 
@@ -167,12 +169,20 @@
           repeatKey: {
             type: String,
             notify: true
+          },
+          updateSave: {
+            type: String,
+            notify: true
+          },
+          hideForm: {
+            type: Boolean
           }
         },
 
         ready: function(event) {
           this.db = this.$.qryActionsData.app.database();
           console.log('proplanr-repeat-firebase',this.db);
+          this.set('hideForm', true);
           this.async(function() {
             console.log("repeatsData: ", this.repeatsData);
           },1000);
@@ -223,6 +233,8 @@
           }
           this.$.repeatForm.repeatData = '';
           this.$.repeatForm.repeatData = data;
+          this.updateSave = "Update";
+          this.set('hideForm', false);
           // console.log('editRepeat:',this.$.repeatForm.repeatData);
         },
         
