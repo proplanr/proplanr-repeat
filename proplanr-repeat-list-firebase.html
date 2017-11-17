@@ -88,7 +88,7 @@
       data="{{actionsData}}">
     </firebase-query>
     
-    <proplanr-repeat-horizontal id="repeatForm" save-update="{{updateSave}}" hidden$="{{hideForm}}"></proplanr-repeat-horizontal>
+    <proplanr-repeat-horizontal id="repeatForm" save-update-add="{{updateSave}}" form-disabled="{{disableForm}}"></proplanr-repeat-horizontal>
 
     <paper-dialog id="dialogDelete">
       <h2 id="dialogHeader">Delete Repeat?</h2>
@@ -99,7 +99,7 @@
       </div>
     </paper-dialog>
 
-    <paper-fab mini id="addRepeat" icon="proplanr-icons:add" title="add"></paper-fab>
+    <!-- <paper-fab mini id="addRepeat" icon="proplanr-icons:add" title="add"></paper-fab> -->
 
     <vaadin-grid id="repeatsGrid" items="{{repeatsData}}" style="height: auto" active-item="{{activeItem}}" on-active-item-changed="_onActiveItemChanged">
 
@@ -164,6 +164,11 @@
   <script>
       Polymer({
         is: 'proplanr-repeat-list-firebase', 
+
+        listeners: {
+        'saveRepeat': 'saveData'
+        },
+
         properties: {
           // repeatsData: {
           //   type: Array,
@@ -183,8 +188,10 @@
             type: String,
             notify: true
           },
-          hideForm: {
-            type: Boolean
+          disableForm: {
+            type: Boolean,
+            value: true,
+            notify: true
           }
         },
 
@@ -215,15 +222,7 @@
         },
 
         deleteRepeat: function(event) {
-          console.log('deleteRepeat', event);
-          // let data = "";
-          // if(Polymer.Element) {
-          //   // polymer 2.x
-          //   data = event.target.__data.item;
-          // } else {
-          //   data = event.target.__data__.item;
-          // }
-          // console.log(data);          
+          console.log('deleteRepeat', event);        
           let key = this.repeatKey || '';
           this.db.ref('/actions').orderByChild("repeat_key").equalTo(key).on('child_added', function(snapshot) {
             snapshot.ref.remove();
@@ -243,7 +242,9 @@
           this.$.repeatForm.repeatData = '';
           this.$.repeatForm.repeatData = data;
           this.updateSave = "Update";
-          this.set('hideForm', false);
+          this.disableForm = false;
+
+          this.fire('editRepeat', data);
           // console.log('editRepeat:',this.$.repeatForm.repeatData);
         },
         
@@ -263,10 +264,46 @@
           this.$.dialogDelete.open();
         },
 
-        // deleteOk: function(event) {
-        //   console.log("deleteOk", event);
-        //   this.deleteRepeat(event);
-        // }
+        saveData: function(data) {
+          this.db.ref('/repeats').push(data.detail).then(snapshot => {
+            let repeat_key = snapshot.key;
+            let repeat = data.detail;
+            // add actions for number occurrencies or end date
+            if (repeat.ends === 'after') {
+              let every = repeat.repeat_every;
+              this.saveActions(every,repeat,repeat_key);
+            } else if(repeat.ends === 'on') {
+              let start = moment(repeat.start_on);
+              let end = moment(repeat.end_on).add(1, repeat.repeat_frequence);
+              let calculate = end.diff(start, repeat.repeat_frequence);
+              repeat.after_occurrences = calculate / repeat.repeat_every;
+              this.db.ref('/repeats/' + repeat_key).update({
+                after_occurrences: Math.ceil(calculate / repeat.repeat_every,
+              )});
+              this.saveActions(repeat.repeat_every, repeat, repeat_key);
+            } else {
+              console.log("nothing");
+            }     
+          });
+        },
+
+        saveActions: function(every,repeat,repeat_key) {
+          console.log("saveActions");
+          let due_date = repeat.start_on;
+          for(let i = 0; i < repeat.after_occurrences; i++) {
+            if (i > 0) {
+              due_date = moment(due_date).add(every, repeat.repeat_frequence);
+            }
+            this.db.ref('/actions').push({
+              repeat_key: repeat_key,
+              title: repeat.title,
+              due_date: moment(due_date).format("YYYY-MM-DD")
+            });
+          }
+          this.disableForm = true;
+          this.saveUpdatePrompt = 'ADD';
+          this.cancelRepeat();
+        }
 
       });
   </script>

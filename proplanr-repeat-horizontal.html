@@ -157,7 +157,7 @@
       <div id="dialogBody">{{dialogBodyValue}}<br>{{dialogBodyValue2}}</div>
       <div class="buttons">
         <paper-button dialog-dismiss autofocus>Cancel</paper-button>
-        <paper-button dialog-confirm on-tap="saveOk">Ok</paper-button>
+        <paper-button dialog-confirm on-tap="saveRepeat">Ok</paper-button>
       </div>
     </paper-dialog>
     
@@ -216,7 +216,7 @@
           <div class="flex-item btmRow">
             <div id="buttons">
               <paper-button raised on-click="cancelRepeat" disabled$="{{formDisabled}}">CANCEL</paper-button>
-              <paper-button raised on-click="promptSave">{{saveUpdatePrompt}}</paper-button>
+              <paper-button raised on-click="checkMode">{{saveUpdateAdd}}</paper-button>
             </div>
           </div>
 
@@ -228,6 +228,7 @@
   <script>
     Polymer({
       is: 'proplanr-repeat-horizontal',
+
       properties: {
         /* repeatData Object: title, repeat_frequence, repeat_every, start_on, ends, end_on, after_occurrences
         */
@@ -249,7 +250,7 @@
           type: Boolean,
           value: true
         },
-        saveUpdatePrompt: {
+        saveUpdateAdd: {
           type: String,
           value: 'ADD',
           notify: true
@@ -260,6 +261,10 @@
           notify: true
         },
         
+      },
+
+      listeners: {
+        'editRepeat': 'enableForm'
       },
       
       ready: function(event) {
@@ -293,7 +298,7 @@
         if(this.repeatData.title === "" || this.repeatData.repeat_frequence === "" || this.repeatData.repeat_every <= 0 || this.repeatData.start_on === "" || this.repeatData.ends === "") {
           console.log("need to fill in entire form");
           this.formDisabled = false;
-          this.saveUpdatePrompt = 'SAVE';
+          this.saveUpdateAdd = 'SAVE';
         } else {
           if(this.repeatData.ends === "on" && !this.repeatData.end_on) {
             console.log("need to set end date");
@@ -301,6 +306,9 @@
             console.log("need to set # of occurences");
           } else { 
           this.fire('saveRepeat',this.repeatData);
+          // this.formDisabled = true;
+          // this.saveUpdateAdd = 'ADD';
+          // this.cancelRepeat();
           console.log("saved");
           }
         }
@@ -315,11 +323,12 @@
         this.set('repeatData.ends', "");
         this.set('repeatData.end_on', "");
         this.set('repeatData.after_occurrences', 0);
+        this.saveUpdateAdd = "ADD";
       },
 
       onSelectedEnds: function(event) {
         this.async(function() {
-          this.textFilter = '';
+          // this.textFilter = '';
           if (this.repeatData.ends === 'on') {
             this.async(function() {
               this.$.endOnVDP.disabled = false;
@@ -340,30 +349,35 @@
         },1);
       },
 
-      promptSave: function(event) {
-        // console.log('promptSave',event);
-        // this.$.dialogHeader.innerHTML = "Save Repeat?"
-        this.formDisabled = false;
-        if (this.saveUpdatePrompt === 'ADD') {
-          this.saveUpdatePrompt = 'SAVE';
-        } else if (this.saveUpdatePrompt === 'SAVE') {
+      checkMode: function(event) {
+        // this.formDisabled = false;
+        if (this.saveUpdateAdd === 'ADD') {
+          this.cancelRepeat();
+          this.formDisabled = false;
+          this.saveUpdateAdd = 'SAVE';
+        } else if (this.saveUpdateAdd === 'SAVE') {
           this.saveRepeat();
+        } else if (this.saveUpdateAdd === 'UPDATE') {
+          this.promptUpdate();
           this.formDisabled = true;
-          this.saveUpdatePrompt = 'ADD';
-          // Reset form
-        } else if (this.saveUpdatePrompt === 'UPDATE') {
-          this.dialogBodyValue = this.repeatData.title;
-          this.dialogBodyValue2 = 'This will delete all previoius actions and recreate them.';
-          this.$.dialogSave.open();
-          this.formDisabled = true;
-          // Reset form
+          // this.cancelRepeat();
         }
       },
 
-      saveOk: function(event) {
-        console.log('saveOk:');
-        this.saveRepeat();
+      promptUpdate: function(event) {
+        this.dialogBodyValue = this.repeatData.title;
+        this.dialogBodyValue2 = 'This will delete all previoius actions and recreate them.';
+        this.$.dialogSave.open();
+      },
+
+      enableForm: function(data) {
+        console.log("enableForm: ", data)
       }
+
+      // saveOk: function(event) {
+      //   console.log('saveOk:');
+      //   this.saveRepeat();
+      // }
       
     });
   </script>

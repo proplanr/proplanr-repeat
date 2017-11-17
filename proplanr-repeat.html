@@ -248,7 +248,7 @@
 
       onSelectedEnds: function(event) {
         this.async(function() {
-          this.textFilter = '';
+          // this.textFilter = '';
           if (this.repeatData.ends === 'on') {
             this.$.endOn.disabled = false;
             this.$.afterOccurrencesInput.disabled = true;
@@ -259,11 +259,7 @@
             this.set('repeatData.end_on', "");
           }
         },1);
-      },
-
-      layoutChange: function(layout) {
-        console.log('layoutChange:',layout);
-      },
+      }
       
     });
   </script>
