@@ -153,11 +153,11 @@
     </style>
 
     <paper-dialog id="dialogSave">
-      <h2 id="dialogHeader">Save Repeat?</h2>
+      <h2 id="dialogHeader">Update Repeat?</h2>
       <div id="dialogBody">{{dialogBodyValue}}<br>{{dialogBodyValue2}}</div>
       <div class="buttons">
-        <paper-button dialog-dismiss autofocus>Cancel</paper-button>
-        <paper-button dialog-confirm on-tap="saveRepeat">Ok</paper-button>
+        <paper-button dialog-dismiss autofocus on-tap="cancelRepeat">Cancel</paper-button>
+        <paper-button dialog-confirm on-tap="updateRepeat">Ok</paper-button>
       </div>
     </paper-dialog>
     
@@ -284,6 +284,7 @@
           this.toggleClass('afterContainerP2',false,this.$.afterContainer);
         }
         console.log('ready:',polymerVersion);
+        this.addEventListener('editRepeat', this.enableForm());
       },
       
       setEnd: function(event) {
@@ -350,7 +351,7 @@
       },
 
       checkMode: function(event) {
-        // this.formDisabled = false;
+        console.log("save update add");
         if (this.saveUpdateAdd === 'ADD') {
           this.cancelRepeat();
           this.formDisabled = false;
@@ -358,9 +359,12 @@
         } else if (this.saveUpdateAdd === 'SAVE') {
           this.saveRepeat();
         } else if (this.saveUpdateAdd === 'UPDATE') {
+          console.log('update');
           this.promptUpdate();
           this.formDisabled = true;
           // this.cancelRepeat();
+        } else {
+          console.log("nothing");
         }
       },
 
@@ -372,6 +376,11 @@
 
       enableForm: function(data) {
         console.log("enableForm: ", data)
+      },
+
+      updateRepeat: function(data){
+        console.log("update repeat: ", this.repeatData);
+        this.fire('updateRepeat', this.repeatData);
       }
 
       // saveOk: function(event) {
