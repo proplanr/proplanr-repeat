@@ -325,7 +325,11 @@
         updateRepeatDb: function(data) {
           let updateKey = data.detail.$key;
           console.log("/repeats/" + updateKey);
-          this.db.ref("/repeats/" + updateKey).update(data.detail).then(snapshot => {
+          this.db.ref("/repeats/" + updateKey).update({
+            title: data.detail.title,
+            // add additional fields to be updated (JMW)
+
+            }).then(snapshot => {
             console.log(snapshot);
           });
           console.log("update db");
