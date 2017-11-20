@@ -258,7 +258,8 @@
           this.$.repeatForm.repeatData = data;
           this.updateSave = "UPDATE";
           this.disableForm = false;
-          this.fire('editRepeat', data);
+          this.$.repeatForm.enableForm(data);
+          // this.fire('editRepeatEvent', data);
           console.log('editRepeat:', data);
         },
         

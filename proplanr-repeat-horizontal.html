@@ -262,10 +262,6 @@
         },
         
       },
-
-      listeners: {
-        'editRepeat': 'enableForm'
-      },
       
       ready: function(event) {
         let polymerVersion = '';
@@ -284,7 +280,6 @@
           this.toggleClass('afterContainerP2',false,this.$.afterContainer);
         }
         console.log('ready:',polymerVersion);
-        this.addEventListener('editRepeat', this.enableForm());
       },
       
       setEnd: function(event) {
