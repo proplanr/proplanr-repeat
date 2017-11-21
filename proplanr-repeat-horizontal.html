@@ -183,7 +183,7 @@
           </div>
         
           <div class="flex-item topRow layout horizontal">
-            <p class="label">Repeat Every: </p><paper-input class="number" value="{{repeatData.repeat_every}}" type="number" no-float disabled$="{{formDisabled}}"></paper-input> 
+            <p class="label">Repeat Every: </p><paper-input class="number" value="{{repeatData.repeat_every}}" type="number" min="1" no-float disabled$="{{formDisabled}}"></paper-input> 
             <p class="endLabel">{{repeatData.repeat_frequence}}</p>
           </div>
       
@@ -208,7 +208,7 @@
 
           <div class="flex-item btmRow" hidden$="{{hideAfter}}">
             <div id="afterContainer"  class$="afterContainerP2" class="layout horizontal">
-            <paper-input id="afterOccurrencesInput" type="number" value="{{repeatData.after_occurrences}}" class="number" disabled></paper-input>
+            <paper-input id="afterOccurrencesInput" type="number" value="{{repeatData.after_occurrences}}" class="number" min="1" disabled></paper-input>
             <p class="endLabel">occurrences</p>
             </div>
           </div>
@@ -291,7 +291,7 @@
       
       saveRepeat: function() {
         // console.log('saveRepeat', this.repeatData)
-        if(this.repeatData.title === "" || this.repeatData.repeat_frequence === "" || this.repeatData.repeat_every <= 0 || this.repeatData.start_on === "" || this.repeatData.ends === "") {
+        if(this.repeatData.title === "" || this.repeatData.repeat_frequence === "" || this.repeatData.start_on === "" || this.repeatData.ends === "") {
           console.log("need to fill in entire form");
           this.formDisabled = false;
           this.saveUpdateAdd = 'SAVE';
@@ -320,6 +320,9 @@
         this.set('repeatData.end_on', "");
         this.set('repeatData.after_occurrences', 0);
         this.saveUpdateAdd = "ADD";
+        this.set('hideEndOn', false);
+        this.set('hideAfter', true);
+        this.$.endOnVDP.disabled = true;
       },
 
       onSelectedEnds: function(event) {
@@ -346,7 +349,6 @@
       },
 
       checkMode: function(event) {
-        console.log("save update add");
         if (this.saveUpdateAdd === 'ADD') {
           this.cancelRepeat();
           this.formDisabled = false;
@@ -354,7 +356,6 @@
         } else if (this.saveUpdateAdd === 'SAVE') {
           this.saveRepeat();
         } else if (this.saveUpdateAdd === 'UPDATE') {
-          console.log('update');
           this.promptUpdate();
           this.formDisabled = true;
           // this.cancelRepeat();

@@ -135,7 +135,7 @@
         </paper-dropdown-menu>
         
         <div class="layout horizontal center">
-          <p class="label">Repeat Every: </p><paper-input class="number" value="{{repeatData.repeat_every}}" type="number" no-float></paper-input> 
+          <p class="label">Repeat Every: </p><paper-input class="number" value="{{repeatData.repeat_every}}" type="number" min="0" no-float></paper-input> 
           <p class="endLabel">{{repeatData.repeat_frequence}}</p>
         </div>
         
@@ -154,7 +154,7 @@
         <vaadin-date-picker id="endOn" value="{{repeatData.end_on}}" class$="endOnP2" min="{{repeatData.start_on}}" disabled></vaadin-date-picker>
         
         <div id="afterContainer"  class$="afterContainerP2" class="layout horizontal center">
-          <paper-input id="afterOccurrencesInput" type="number" value="{{repeatData.after_occurrences}}" class="number" disabled></paper-input>
+          <paper-input id="afterOccurrencesInput" type="number" value="{{repeatData.after_occurrences}}" class="number" min="0" disabled></paper-input>
           <p class="endLabel">occurrences</p>
         </div>
         
