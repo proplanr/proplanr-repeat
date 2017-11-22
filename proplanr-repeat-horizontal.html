@@ -293,8 +293,8 @@
         // console.log('saveRepeat', this.repeatData)
         if(this.repeatData.title === "" || this.repeatData.repeat_frequence === "" || this.repeatData.start_on === "" || this.repeatData.ends === "") {
           console.log("need to fill in entire form");
-          this.formDisabled = false;
-          this.saveUpdateAdd = 'SAVE';
+          // this.formDisabled = false;
+          // this.saveUpdateAdd = 'SAVE';
         } else {
           if(this.repeatData.ends === "on" && !this.repeatData.end_on) {
             console.log("need to set end date");
@@ -305,7 +305,7 @@
           // this.formDisabled = true;
           // this.saveUpdateAdd = 'ADD';
           // this.cancelRepeat();
-          console.log("saved");
+          console.log("saved repeat", this.repeatData);
           }
         }
       },
@@ -350,6 +350,7 @@
 
       checkMode: function(event) {
         if (this.saveUpdateAdd === 'ADD') {
+          this.repeatData = {};
           this.cancelRepeat();
           this.formDisabled = false;
           this.saveUpdateAdd = 'SAVE';
