@@ -251,8 +251,10 @@
           if(Polymer.Element) {
             // polymer 2.x
             data = event.model.__data.item;
+            console.log("p2:", data);
           } else {
             data = event.model.__data__.item;
+            console.log("p1:", data);
           }
           console.log('editRepeat:', data);
           this.$.repeatForm.repeatData = '';
@@ -342,7 +344,7 @@
           }
           this.disableForm = true;
           this.updateSave = 'ADD';
-          this.$.repeatForm.cancelRepeat();  
+          // this.$.repeatForm.cancelRepeat();
         },
 
         updateRepeatDb: function(data) {
@@ -381,7 +383,7 @@
               console.log("updateActions: ", data.detail);
               this.updateSave = "ADD";
               this.disableForm = true;
-              this.$.repeatForm.cancelRepeat();  
+              this.$.repeatForm.cancelRepeat();
           },1000);
             
               // this.db.ref('/actions').on();
