@@ -1,0 +1,265 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-component-page/iron-component-page.html">
+<link rel="import" href="../iron-form/iron-form.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../moment-element/moment-element.html">
+
+<!--
+  
+  Element providing repeating action similiar to Google Calendar Repeat.. Event.
+  
+  <proplanr-repeat></proplanr-repeat>
+  
+  ### Styling
+  
+  The following custom properties and mixins are available for styling:
+  
+  Custom property | Description | Default
+  ----------------|-------------|----------
+  `--proplanr-repeat-height` | Custom height for element    | `auto`
+  
+  ### Install
+  
+  bower install --save proplanr-repeat
+  
+  @group ProPlanr Elements
+  @element proplanr-repeat
+  @demo demo/index.html
+-->
+
+<dom-module id="proplanr-repeat">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment">
+      :host {
+        --calculated-proplanr-repeat-height: var(--proplanr-repeat-height, auto);
+        display: block;
+        height: 460px;
+        width: 300px;
+        padding: 20px;
+        border: 1px solid gray;
+      }
+
+      /* * {
+        border: red solid 1px;
+      } */
+      
+      .number {
+        width: 50px;
+      }
+      
+      .label {
+        padding-right: 5px;
+        font-size: 18px;
+      }
+      
+      .endLabel {
+        padding-left: 5px;
+        font-size: 18px;
+        
+      }
+      
+      paper-input {
+        margin-top: -15px;
+        text-align: center;
+      }
+      
+      vaadin-date-picker {
+        width: 175px;
+        margin-top: -25px;
+        text-align: center;
+      }
+
+      #titleInput {
+        text-align: left;       
+      }
+      
+      #endOn {
+        position:relative;
+        margin-top: -33px;
+        left: 70px;
+      }
+
+      #afterContainer {
+        position:relative;
+        margin-top: 3px;
+        left: 80px;
+      }
+
+      paper-radio-group {
+        position: absolute;
+        margin-top: -15px;
+      }
+      
+      #buttons {
+        float: right;
+      }
+      
+      paper-button {
+        margin: 5px 0px 5px 10px;
+      }
+
+      /* polymer 2 styles */
+      .datePickerP2 {
+        margin-top: 4px;
+      }
+
+      .endOnP2 {
+        margin-top: -150px;
+      }
+
+      .afterContainerP2  {
+        margin-top: 3px;
+      }
+    </style>
+    
+    <h2>ProPlanr-repeat default: [[repeats]]!</h2>
+    <iron-form>
+      <form id="repeatForm" method="get" action="/form/handler">
+        <paper-input id="titleInput" value="{{repeatData.title}}" label="Title"></paper-input> 
+        <paper-dropdown-menu label="Repeat">
+          <paper-listbox class="dropdown-content" slot="dropdown-content" selected="{{repeatData.repeat_frequence}}"  attr-for-selected="value">
+            <paper-item value="days">Daily</paper-item>
+            <paper-item value="weeks">Weekly</paper-item>
+            <paper-item value="months">Monthly</paper-item>
+            <paper-item value="quarters">Quarterly</paper-item>
+            <paper-item value="years">Yearly</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        
+        <div class="layout horizontal center">
+          <p class="label">Repeat Every: </p><paper-input class="number" value="{{repeatData.repeat_every}}" type="number" min="0" no-float></paper-input> 
+          <p class="endLabel">{{repeatData.repeat_frequence}}</p>
+        </div>
+        
+        <div class="layout horizontal center">
+          <p class="label">Start On:</p>
+          <vaadin-date-picker id="startOn" value="{{repeatData.start_on}}" class$="datePickerP2" min="{{today}}"></vaadin-date-picker>
+        </div>
+        
+        <p class="label">Ends: </p>
+        <paper-radio-group selected="{{repeatData.ends}}" class="layout vertical" on-iron-activate="onSelectedEnds">
+          <!-- <paper-radio-button name="never">Never</paper-radio-button> -->
+          <paper-radio-button name="on" class="label">On</paper-radio-button>
+          <paper-radio-button name="after" class="label">After</paper-radio-button>
+        </paper-radio-group> 
+        
+        <vaadin-date-picker id="endOn" value="{{repeatData.end_on}}" class$="endOnP2" min="{{repeatData.start_on}}" disabled></vaadin-date-picker>
+        
+        <div id="afterContainer"  class$="afterContainerP2" class="layout horizontal center">
+          <paper-input id="afterOccurrencesInput" type="number" value="{{repeatData.after_occurrences}}" class="number" min="0" disabled></paper-input>
+          <p class="endLabel">occurrences</p>
+        </div>
+        
+        <div class="layout horizontal" id="buttons">
+          <paper-button raised on-click="cancelRepeat">CANCEL</paper-button>
+          <paper-button raised on-click="saveRepeat">SAVE</paper-button>
+        </div>
+      </form>
+    </iron-form>
+  </template>
+  
+  <script>
+    Polymer({
+      is: 'proplanr-repeat',
+      properties: {
+        /* repeatData Object: title, repeat_frequence, repeat_every, start_on, ends, end_on, after_occurrences
+        */
+        repeatData: {
+          type: Object,
+          value: function() {
+            return {};
+          }
+        },
+        layout: {
+          type: String,
+          value: 'Vertical',
+          notify: true,
+          observer: 'layoutChange'
+        },
+        today: {
+          type: String
+        }
+        
+      },
+      
+      ready: function(event) {
+        let polymerVersion = '';
+        this.set('repeatData.after_occurrences', 0);
+        this.set('repeatData.repeat_every', 0);
+        this.set('today', moment().format("YYYY-MM-DD"));        
+        if (Polymer.Element) {
+          polymerVersion = '2.x';
+          this.toggleClass('datePickerP2',true,this.$.startOn);
+          this.toggleClass('endOnP2',true,this.$.endOn);
+          this.toggleClass('afterContainerP2',true,this.$.afterContainer);
+        } else {
+          polymerVersion = '1.x';
+          this.toggleClass('datePickerP2',false,this.$.startOn);
+          this.toggleClass('endOnP2',false,this.$.endOn);
+          this.toggleClass('afterContainerP2',false,this.$.afterContainer);
+        }
+        console.log('ready:',polymerVersion);
+      },
+      
+      setEnd: function(event) {
+        if(event.target.checked) {
+          console.log(event.target.checked.length);
+          return this.disabled = true;
+        }
+      },
+      
+      saveRepeat: function(event) {
+        if(this.repeatData.title === "" || this.repeatData.repeat_frequence === "" || this.repeatData.repeat_every <= 0 || this.repeatData.start_on === "" || this.repeatData.ends === "") {
+          console.log("need to fill in entire form");
+        } else {
+          if(this.repeatData.ends === "on" && !this.repeatData.end_on) {
+            console.log("need to set end date");
+          } else if (this.repeatData.ends === "after" &&      this.repeatData.after_occurrences <= 0) {
+            console.log("need to set # of occurences");
+          } else { 
+          this.fire('saveRepeat',this.repeatData);
+          console.log("saved");
+          }
+        }
+      },
+      
+      cancelRepeat: function(event) {
+        console.log('cancelRepeat');
+        this.set('repeatData.title', "");
+        this.set('repeatData.repeat_frequence', "");
+        this.set('repeatData.repeat_every', 0);
+        this.set('repeatData.start_on', "");
+        this.set('repeatData.ends', "");
+        this.set('repeatData.end_on', "");
+        this.set('repeatData.after_occurrences', 0);
+      },
+      
+      /* repeatData Object: title, repeat_frequence, repeat_every, start_on, ends, end_on, after_occurrences
+        */
+
+      onSelectedEnds: function(event) {
+        this.async(function() {
+          // this.textFilter = '';
+          if (this.repeatData.ends === 'on') {
+            this.$.endOn.disabled = false;
+            this.$.afterOccurrencesInput.disabled = true;
+            this.set('repeatData.after_occurrences', 0);
+          } else if (this.repeatData.ends === 'after') {
+            this.$.endOn.disabled = true;
+            this.$.afterOccurrencesInput.disabled = false;
+            this.set('repeatData.end_on', "");
+          }
+        },1);
+      }
+      
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,390 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-component-page/iron-component-page.html">
+<link rel="import" href="../iron-form/iron-form.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../moment-element/moment-element.html">
+
+<!--
+  
+  Element providing repeating action similiar to Google Calendar Repeat.. Event.
+  
+  <proplanr-repeat></proplanr-repeat>
+  
+  ### Styling
+  
+  The following custom properties and mixins are available for styling:
+  
+  Custom property | Description | Default
+  ----------------|-------------|----------
+  `--proplanr-repeat-height` | Custom height for element    | `auto`
+  
+  ### Install
+  
+  bower install --save proplanr-repeat
+  
+  @group ProPlanr Elements
+  @element proplanr-repeat
+  @demo demo/index.html
+-->
+
+<dom-module id="proplanr-repeat-horizontal">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment">
+      :host {
+        --calculated-proplanr-repeat-height: var(--proplanr-repeat-height, auto);
+        display: block;
+        border: 1px solid gray;
+      }
+
+      /* * {
+        border: red solid 1px;
+      } */
+      
+      .number {
+        width: 50px;
+        text-align: center;
+        padding-top: 5px;
+      }
+      
+      .label {
+        font-size: 18px;
+      }
+      
+      .endLabel {
+        padding-left: 5px;
+        padding-top: 7px;
+        font-size: 18px;
+        
+      }
+      
+      /* paper-input {
+        margin-top: -15px;
+        text-align: center;
+      } */
+      
+      vaadin-date-picker {
+        width: 175px;
+        margin-top: 5px;
+        text-align: center;
+      }
+
+      #titleInput {
+        text-align: left;
+        width: 185px;
+      }
+      
+      #endOnVDP {
+        position:relative;
+        margin-top: -5px;
+        /* left: 70px; */
+      }
+
+      #afterOccurrencesInput {
+        margin-top: -10px;
+      }
+
+      /* #afterContainer {
+        position:relative;
+        margin-top: 3px;
+        left: 80px;
+      } */
+
+      paper-radio-group {
+        /* position: absolute; */
+        margin-top: 7px;
+      }
+
+      #endsGroup {
+        margin-top: 7px;
+      }
+      
+      #buttons {
+        float: right;
+        margin-top: 14px;
+      }
+      
+      paper-button {
+        margin: 5px 0px 5px 10px;
+      }
+
+      .flex-container {
+        display: flex; 
+      }
+
+      .center {
+        justify-content: center;
+      }
+
+      .space-between { 
+        justify-content: space-between; 
+      }
+
+      .topRow {
+        padding: 15px;
+      }
+
+      .btmRow {
+        padding: 15px;
+      }
+
+      /* polymer 2 styles */
+      .datePickerP2 {
+        margin-top: 35px;
+        margin-left: 8px;
+        text-align: center;
+      }
+
+      .endOnP2 {
+        margin-top: 25px!important;
+      }
+
+      .afterContainerP2  {
+        margin-top: 3px;
+      }
+    </style>
+
+    <paper-dialog id="dialogSave">
+      <h2 id="dialogHeader">Update Repeat?</h2>
+      <div id="dialogBody">{{dialogBodyValue}}<br>{{dialogBodyValue2}}</div>
+      <div class="buttons">
+        <paper-button dialog-dismiss autofocus on-tap="cancelRepeat">Cancel</paper-button>
+        <paper-button dialog-confirm on-tap="updateRepeat">Ok</paper-button>
+      </div>
+    </paper-dialog>
+    
+    <h2>ProPlanr-repeat default: [[repeats]]!</h2>
+    <iron-form>
+      <form id="repeatForm" method="get" action="/form/handler" >
+        <div class="flex-container center">
+          <div class="flex-item topRow">
+            <paper-input id="titleInput" value="{{repeatData.title}}" label="Title" disabled$="{{formDisabled}}"></paper-input>
+          </div>
+          
+          <div class="flex-item topRow">
+            <paper-dropdown-menu label="Repeat" id="repeatDrop" disabled$="{{formDisabled}}">
+              <paper-listbox class="dropdown-content" slot="dropdown-content" selected="{{repeatData.repeat_frequence}}"
+                attr-for-selected="value" disabled$="{{formDisabled}}">
+                <paper-item value="days">Daily</paper-item>
+                <paper-item value="weeks">Weekly</paper-item>
+                <paper-item value="months">Monthly</paper-item>
+                <paper-item value="quarters">Quarterly</paper-item>
+                <paper-item value="years">Yearly</paper-item>
+              </paper-listbox>
+            </paper-dropdown-menu>
+          </div>
+        
+          <div class="flex-item topRow layout horizontal">
+            <p class="label">Repeat Every: </p><paper-input class="number" value="{{repeatData.repeat_every}}" type="number" min="1" no-float disabled$="{{formDisabled}}"></paper-input> 
+            <p class="endLabel">{{repeatData.repeat_frequence}}</p>
+          </div>
+      
+          <div class="flex-item topRow layout horizontal">
+            <p class="label" id="startOn">Start On:</p>
+            <vaadin-date-picker id="startOn" value="{{repeatData.start_on}}" class$="datePickerP2" min="{{today}}" disabled$="{{formDisabled}}"></vaadin-date-picker>
+          </div>
+        </div>
+        
+        <div class="flex-container space-between">
+          <div class="flex-item btmRow layout horizontal" id="endsGroup">
+            <p class="label">Ends: </p>
+            <paper-radio-group selected="{{repeatData.ends}}" on-iron-activate="onSelectedEnds">
+              <paper-radio-button name="on" class="label" disabled$="{{formDisabled}}">On</paper-radio-button>
+              <paper-radio-button name="after" class="label" disabled$="{{formDisabled}}">After</paper-radio-button>
+            </paper-radio-group>
+          </div>
+
+          <div class="flex-item btmRow" hidden$="{{hideEndOn}}">
+            <vaadin-date-picker id="endOnVDP" value="{{repeatData.end_on}}" class="endOnP2" min="{{repeatData.start_on}}" disabled></vaadin-date-picker>
+          </div>
+
+          <div class="flex-item btmRow" hidden$="{{hideAfter}}">
+            <div id="afterContainer"  class$="afterContainerP2" class="layout horizontal">
+            <paper-input id="afterOccurrencesInput" type="number" value="{{repeatData.after_occurrences}}" class="number" min="1" disabled></paper-input>
+            <p class="endLabel">occurrences</p>
+            </div>
+          </div>
+        
+          <div class="flex-item btmRow">
+            <div id="buttons">
+              <paper-button raised on-click="cancelRepeat" disabled$="{{formDisabled}}">CANCEL</paper-button>
+              <paper-button raised on-click="checkMode">{{saveUpdateAdd}}</paper-button>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </iron-form>
+  </template>
+  
+  <script>
+    Polymer({
+      is: 'proplanr-repeat-horizontal',
+
+      properties: {
+        /* repeatData Object: title, repeat_frequence, repeat_every, start_on, ends, end_on, after_occurrences
+        */
+        repeatData: {
+          type: Object,
+          notify: true,
+          value: function() {
+            return {};
+          }
+        },
+        today: {
+          type: String
+        },
+        hideEndOn: {
+          type: Boolean,
+          value: false
+        },
+        hideAfter: {
+          type: Boolean,
+          value: true
+        },
+        saveUpdateAdd: {
+          type: String,
+          value: 'ADD',
+          notify: true
+        },
+        formDisabled: {
+          type: Boolean,
+          value: true,
+          notify: true
+        },
+        
+      },
+      
+      ready: function(event) {
+        let polymerVersion = '';
+        this.set('repeatData.after_occurrences', 0);
+        this.set('repeatData.repeat_every', 0);
+        this.set('today', moment().format("YYYY-MM-DD"));        
+        if (Polymer.Element) {
+          polymerVersion = '2.x';
+          this.toggleClass('datePickerP2',true,this.$.startOn);
+          this.toggleClass('endOnP2',true,this.$.endOnVDP);
+          this.toggleClass('afterContainerP2',true,this.$.afterContainer);
+        } else {
+          polymerVersion = '1.x';
+          this.toggleClass('datePickerP2',false,this.$.startOn);
+          this.toggleClass('endOnP2',false,this.$.endOnVDP);
+          this.toggleClass('afterContainerP2',false,this.$.afterContainer);
+        }
+        console.log('ready:',polymerVersion);
+      },
+      
+      setEnd: function(event) {
+        if(event.target.checked) {
+          console.log(event.target.checked.length);
+          return this.disabled = true;
+        }
+      },
+      
+      saveRepeat: function() {
+        // console.log('saveRepeat', this.repeatData)
+        if(this.repeatData.title === "" || this.repeatData.repeat_frequence === "" || this.repeatData.start_on === "" || this.repeatData.ends === "") {
+          console.log("need to fill in entire form");
+          // this.formDisabled = false;
+          // this.saveUpdateAdd = 'SAVE';
+        } else {
+          if(this.repeatData.ends === "on" && !this.repeatData.end_on) {
+            console.log("need to set end date");
+          } else if (this.repeatData.ends === "after" &&      this.repeatData.after_occurrences <= 0) {
+            console.log("need to set # of occurences");
+          } else { 
+          this.fire('saveRepeat',this.repeatData);
+          // this.formDisabled = true;
+          // this.saveUpdateAdd = 'ADD';
+          // this.cancelRepeat();
+          console.log("saved repeat", this.repeatData);
+          }
+        }
+      },
+      
+      cancelRepeat: function(event) {
+        this.formDisabled = true;
+        this.set('repeatData.title', "");
+        this.set('repeatData.repeat_frequence', "");
+        this.set('repeatData.repeat_every', 0);
+        this.set('repeatData.start_on', "");
+        this.set('repeatData.ends', "");
+        this.set('repeatData.end_on', "");
+        this.set('repeatData.after_occurrences', 0);
+        this.saveUpdateAdd = "ADD";
+        this.set('hideEndOn', false);
+        this.set('hideAfter', true);
+        this.$.endOnVDP.disabled = true;
+      },
+
+      onSelectedEnds: function(event) {
+        this.async(function() {
+          // this.textFilter = '';
+          if (this.repeatData.ends === 'on') {
+            this.async(function() {
+              this.$.endOnVDP.disabled = false;
+              this.$.afterOccurrencesInput.disabled = true;
+            },100);
+            this.set('hideEndOn', false);
+            this.set('hideAfter', true);
+            this.set('repeatData.after_occurrences', 0);
+          } else if (this.repeatData.ends === 'after') {
+            this.async(function() {
+              this.$.endOnVDP.disabled = true;              
+              this.$.afterOccurrencesInput.disabled = false;
+            },100);
+            this.set('hideEndOn', true);
+            this.set('hideAfter', false);
+            this.set('repeatData.end_on', "");
+          }
+        },1);
+      },
+
+      checkMode: function(event) {
+        if (this.saveUpdateAdd === 'ADD') {
+          this.repeatData = {};
+          this.cancelRepeat();
+          this.formDisabled = false;
+          this.saveUpdateAdd = 'SAVE';
+        } else if (this.saveUpdateAdd === 'SAVE') {
+          this.saveRepeat();
+        } else if (this.saveUpdateAdd === 'UPDATE') {
+          this.promptUpdate();
+          this.formDisabled = true;
+          // this.cancelRepeat();
+        } else {
+          console.log("nothing");
+        }
+      },
+
+      promptUpdate: function(event) {
+        this.dialogBodyValue = this.repeatData.title;
+        this.dialogBodyValue2 = 'This will delete all previoius actions and recreate them.';
+        this.$.dialogSave.open();
+      },
+
+      enableForm: function(data) {
+        console.log("enableForm: ", data)
+      },
+
+      updateRepeat: function(data){
+        // console.log("update repeat: ", this.repeatData);
+        this.fire('updateRepeat', this.repeatData);
+      }
+
+      // saveOk: function(event) {
+      //   console.log('saveOk:');
+      //   this.saveRepeat();
+      // }
+      
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>proplanr-repeat test</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../proplanr-repeat.html">
+  </head>
+  <body>
+
+    <test-fixture id="BasicTestFixture">
+      <template>
+        <proplanr-repeat></proplanr-repeat>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="ChangedPropertyTestFixture">
+      <template>
+        <proplanr-repeat repeats="Weekly"></proplanr-repeat>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('proplanr-repeat', function() {
+
+        test('instantiating the element works BasicTestFixture', function() {
+          var element = fixture('BasicTestFixture');
+          assert.equal(element.is, 'proplanr-repeat');
+        });
+
+        test('instantiating the element with default properties works', function() {
+          var element = fixture('BasicTestFixture');
+          assert.equal(element.repeats, 'Daily');
+        });
+
+        test('setting a property on the element works', function() {
+          var element = fixture('ChangedPropertyTestFixture');
+          assert.equal(element.repeats, 'Weekly');
+        });
+
+      });
+    </script>
+
+  </body>
+</html>

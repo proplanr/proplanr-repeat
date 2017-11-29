@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+		<title>proplanr-repeat demo</title>
+
+		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+		<script>
+				window.Polymer = {
+					dom: 'shadow',
+					lazyRegister: true
+				};
+			</script>
+		<link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+		<link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+		<link rel="import" href="../../polymerfire/firebase-app.html">
+		<link rel="import" href="../proplanr-repeat-horizontal.html">
+		<link rel="import" href="demo-selector.html">
+
+		<custom-style include="demo-pages-shared-styles">
+			<style is="custom-style" include="demo-pages-shared-styles">
+				.vertical-section-container {
+					max-width: 980px;
+				}
+			</style>
+		</custom-style>
+	</head>
+
+	<body unresolved>
+		<div class="vertical-section-container centered">
+			<h3>Basic proplanr-repeat-horizontal demo</h3>
+			<demo-selector demo="Proplanr Repeat Horizontal"></demo-selector>
+
+			<demo-snippet>
+				<template>
+					<proplanr-repeat-horizontal></proplanr-repeat-horizontal>
+				</template>
+			</demo-snippet>
+		</div>
+	</body>
+</html>

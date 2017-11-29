@@ -1,0 +1,412 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-fab/paper-fab.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../polymerfire/firebase-document.html">
+<link rel="import" href="../polymerfire/firebase-query.html">
+<link rel="import" href="../polymerfire/polymerfire.html">
+<link rel="import" href="../vaadin-grid/vaadin-grid.html">
+
+<link rel="import" href="proplanr-icons.html">
+<link rel="import" href="proplanr-repeat-horizontal.html">
+
+<dom-module id="proplanr-repeat-list-firebase">
+  <template>
+    <style include="iron-flex iron-flex-alignment iron-flex-factors iron-positioning"></style>      
+    <style>
+      :host {
+        display: block;
+      }
+      .details {
+        height: auto;
+        min-height: 300px;
+        max-width: 550px;
+        padding: 0;
+        margin: 10px;
+        overflow-y: auto;
+        border: 1px solid #bbdefb;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14);
+        font-size: 12px;
+      }
+      .rowHeader {
+        height: 33px;
+        width: 100%;
+        margin-top: 1px;
+        margin-bottom: 0;
+        padding-top: 3px;
+        font-weight: 500;
+        font-size: 13px;
+        /* border: 1px solid #f5f5f5; */
+        border-bottom: 1px solid #2196f3;
+        /* border-left: 1px solid #2196f3;
+        border-right: 1px solid #2196f3; */
+        background-color: #e3f2fd;
+      }
+      .rowMaterial {
+        min-height: 24px;
+        /* margin-top: -1px; */
+        padding-top: 1px;
+        padding-bottom: 1px;
+        padding-left: 3px;
+        padding-right: 5px;
+        font-weight: normal;
+        border-bottom: 1px solid #bbdefb; 
+      }
+      .headerColumn {
+        height: 24px;
+        white-space: nowrap;
+      }
+      .title, .dueDate {
+        margin-right: 20px 
+      }
+      .title {
+        width: 150px;
+      }
+      #addRepeat {
+        margin-top: -30px;
+        margin-left: 14px;
+        z-index: 100;
+      }
+      #repeatsGrid {
+        margin-top: -8px;
+      }
+    </style>
+
+    <firebase-query
+      id="qryRepeatsData"
+      app-name="proplanr-repeat"
+      order-by-child="start_on"
+      path="/repeats"
+      data="{{repeatsData}}">
+    </firebase-query>
+
+    <firebase-query
+      id="qryActionsData"
+      order-by-child="repeat_key"
+      app-name="proplanr-repeat"
+      data="{{actionsData}}">
+    </firebase-query>
+    
+    <proplanr-repeat-horizontal 
+      id="repeatForm" 
+      save-update-add="{{updateSave}}" 
+      form-disabled="{{disableForm}}"
+      hide-end-on="{{hideEndOn}}"
+      hide-after="{{hideAfter}}">
+    </proplanr-repeat-horizontal>
+
+    <paper-dialog id="dialogDelete">
+      <h2 id="dialogHeader">Delete Repeat?</h2>
+      <div id="dialogBody">{{dialogBodyValue}}<br>{{dialogBodyValue2}}</div>
+      <div class="buttons">
+        <paper-button dialog-dismiss autofocus>Cancel</paper-button>
+        <paper-button dialog-confirm on-tap="deleteRepeat">Ok</paper-button>
+      </div>
+    </paper-dialog>
+
+    <!-- <paper-fab mini id="addRepeat" icon="proplanr-icons:add" title="add"></paper-fab> -->
+
+    <vaadin-grid id="repeatsGrid" items="{{repeatsData}}" style="height: auto" active-item="{{activeItem}}" on-active-item-changed="_onActiveItemChanged">
+
+      <template class="row-details">
+        <div class="details layout vertical start">
+          <div class="layout horizontal center rowHeader">
+            <div class="headerColumn title" hidden$="{{narrow}}">Title</div>
+            <div class="headerColumn dueDate">Due Date</div>
+          </div>
+          <template is="dom-repeat" id="materialsSelectedListDR" items="{{actionsData}}" as="action" >
+            <div class="layout horizontal center rowMaterial">
+              <div class="title" hidden$="{{narrow}}">{{action.title}}</div>
+              <div class="dueDate">{{action.due_date}}</div>
+            </div>
+          </template>
+        </div>
+      </template>
+
+      <vaadin-grid-column flex-grow="3">
+        <template class="header">Title</template>
+        <template>[[item.title]]</template>  
+      </vaadin-grid-column>
+      <vaadin-grid-column>
+        <template class="header">Repeat Frequ.</template>
+        <template>{{item.repeat_frequence}}</template> 
+      </vaadin-grid-column>
+      <vaadin-grid-column>
+        <template class="header">Repeat Every</template>
+        <template>{{item.repeat_every}}</template> 
+      </vaadin-grid-column>
+      <vaadin-grid-column>
+        <template class="header">Start On</template>
+        <template>{{item.start_on}}</template> 
+      </vaadin-grid-column>
+      <vaadin-grid-column width="40px">
+        <template class="header">Ends</template>
+        <template>{{item.ends}}</template> 
+      </vaadin-grid-column>
+      <vaadin-grid-column width="50px">
+        <template class="header"># of Ocurr.</template>
+        <template>{{item.after_occurrences}}</template> 
+      </vaadin-grid-column>
+      <vaadin-grid-column width="58px">
+        <template class="header">Ends On</template>
+        <template>{{item.end_on}}</template> 
+      </vaadin-grid-column>
+      <vaadin-grid-column width="20px" class="centerColumn">
+        <template class="header"></template>
+        <template>
+           <paper-icon-button class="deleteButton" icon="proplanr-icons:delete" on-tap="promptDelete">
+        </template>
+      </vaadin-grid-column>
+      <vaadin-grid-column width="20px" class="centerColumn">
+        <template class="header"></template>
+        <template>
+           <paper-icon-button class="editButton" icon="proplanr-icons:edit" on-tap="editRepeat"> 
+        </template>
+      </vaadin-grid-column>
+    </vaadin-grid>
+  </template>
+    
+  <script>
+      Polymer({
+        is: 'proplanr-repeat-list-firebase', 
+
+        listeners: {
+        'saveRepeat': 'saveData',
+        'updateRepeat': 'updateRepeatDb'
+        },
+
+        properties: {
+          // repeatsData: {
+          //   type: Array,
+          //   notify: true,
+          // },
+
+          actionsData: {
+            type: Array,
+            notify: true
+          },
+
+          repeatKey: {
+            type: String,
+            notify: true
+          },
+          updateSave: {
+            type: String,
+            notify: true
+          },
+          disableForm: {
+            type: Boolean,
+            value: true,
+            notify: true
+          },
+          hideEndOn: {
+            type: Boolean,
+            value: false
+          },
+          hideAfter: {
+            type: Boolean,
+            value: true
+          }
+        },
+
+        ready: function(event) {
+          this.db = this.$.qryActionsData.app.database();
+          console.log('proplanr-repeat-firebase',this.db);
+          this.set('hideForm', true);
+          this.async(function() {
+            console.log("repeatsData: ", this.repeatsData);
+          },1000);
+        },
+
+        _onActiveItemChanged: function(item,detail) {
+          if (item.detail.value) { // expand receive details
+            this.$.repeatsGrid.expandedItems = [item.detail.value];
+            this.$.repeatsGrid.selectedItems = item ? [item] : [];
+            let data = item.detail.value;
+            let key = data.$key || '';
+            console.log('_onActiveItemChanged', detail); 
+            this.$.qryActionsData.equalTo = key;
+            this.$.qryActionsData.path = '/actions';
+          } else if (!item.detail.value) { // collapse receive details
+            this.$.repeatsGrid.expandedItems = [item.detail.value];
+            this.$.repeatsGrid.selectedItems = item ? [item] : [];
+          } else { // first load do nothing
+     
+          }
+        },
+
+        deleteRepeat: function(event) {
+          console.log('deleteRepeat', event);        
+          let key = this.repeatKey || '';
+          this.db.ref('/actions').orderByChild("repeat_key").equalTo(key).on('child_added', function(snapshot) {
+            snapshot.ref.remove();
+          });
+          // delete repeat
+          this.db.ref('/repeats/' + key).remove();    
+        },
+
+        editRepeat: function(event) {
+          let data = "";
+          if(Polymer.Element) {
+            // polymer 2.x
+            data = event.model.__data.item;
+            console.log("p2:", data);
+          } else {
+            data = event.model.__data__.item;
+            console.log("p1:", data);
+          }
+          console.log('editRepeat:', data);
+          this.$.repeatForm.repeatData = '';
+          this.$.repeatForm.repeatData = data;
+          this.updateSave = "UPDATE";
+          this.disableForm = false;
+          this.$.repeatForm.onSelectedEnds(data);
+          // this.fire('editRepeatEvent', data);
+          
+        },
+        
+        promptDelete: function(event) {
+          let data = "";
+          if(Polymer.Element) {
+            // polymer 2.x
+            console.log('promptDelete',event.model);
+            data = event.model.__data.item;
+          } else {
+            data = event.model.__data__.item;
+          }
+          this.dialogBodyValue = data.title;
+          this.dialogBodyValue2 = 'This will delete repeat and all actions related.';
+          this.repeatKey = '';
+          this.repeatKey = data.$key;
+          this.$.dialogDelete.open();
+        },
+
+        saveData: function(data) {
+          console.log(data);
+          this.db.ref('/repeats').push(data.detail).then(snapshot => {
+            let saveKey = snapshot.key;
+            let repeat = data.detail;
+            console.log(saveKey);
+            this.calculateActions(repeat, saveKey);
+          //   if (repeat.ends === 'after') {
+          //   console.log("test calculate after");
+          //   let every = repeat.repeat_every;
+          //   this.saveActions(every,repeat,repeat_key);
+          // } else if(repeat.ends === 'on') {
+          //   console.log("test calclulate end on");
+          //   let start = moment(repeat.start_on);
+          //   let end = moment(repeat.end_on).add(1, repeat.repeat_frequence);
+          //   let calculate = end.diff(start, repeat.repeat_frequence);
+          //   repeat.after_occurrences = calculate / repeat.repeat_every;
+          //   this.db.ref('/repeats/' + repeat_key).update({
+          //     after_occurrences: Math.ceil(calculate / repeat.repeat_every,
+          //   )});
+          //   this.saveActions(repeat.repeat_every, repeat, repeat_key);
+          // } else {
+          //   console.log("nothing");
+          // } 
+          });
+        },
+
+        calculateActions: function(repeat, repeat_key) {
+          console.log('calculate actions');
+          if (repeat.ends === 'after') {
+            let every = repeat.repeat_every;
+            this.saveActions(every,repeat,repeat_key);
+          } else if(repeat.ends === 'on') {
+            let start = moment(repeat.start_on);
+            let end = moment(repeat.end_on).add(1, repeat.repeat_frequence);
+            let calculate = end.diff(start, repeat.repeat_frequence);
+            repeat.after_occurrences = calculate / repeat.repeat_every;
+            this.db.ref('/repeats/' + repeat_key).update({
+              after_occurrences: Math.ceil(calculate / repeat.repeat_every,
+            )});
+            this.saveActions(repeat.repeat_every, repeat, repeat_key);
+          } else {
+            console.log("nothing");
+          }
+        },
+
+        saveActions: function(every,repeat,repeat_key) {
+          console.log("saveActions", repeat);
+          let due_date = repeat.start_on;
+          for(let i = 0; i < repeat.after_occurrences; i++) {
+            if (i > 0) {
+              due_date = moment(due_date).add(every, repeat.repeat_frequence);
+            }
+            this.db.ref('/actions').push({
+              repeat_key: repeat_key,
+              title: repeat.title,
+              due_date: moment(due_date).format("YYYY-MM-DD")
+            });
+            console.log("test save actions");
+          }
+          this.disableForm = true;
+          this.updateSave = 'ADD';
+          // this.$.repeatForm.cancelRepeat();
+        },
+
+        updateRepeatDb: function(data) {
+          let updateKey = data.detail.$key || '';
+          this.db.ref("/repeats/" + updateKey).update({
+            after_occurrences: data.detail.after_occurrences,
+            end_on: data.detail.end_on,
+            ends: data.detail.ends,
+            repeat_every: data.detail.repeat_every,
+            repeat_frequence: data.detail.repeat_frequence,
+            start_on: data.detail.start_on,
+            title: data.detail.title
+            }).then(this.updateActions(data));
+          },
+
+          updateActions: function(data) {
+            console.log('update actions');
+            let updateActionKey = data.detail.$key || '';
+            let update = this.db.ref('/actions').orderByChild("repeat_key").equalTo(updateActionKey).on('child_added', function(snapshot) {
+            // let update = this.db.ref('/actions').once('value', function(snapshot) {
+            //   snapshot.forEach(function(childSnapshot) { 
+            //     console.log(childSnapshot.val());
+            //     if(childSnapshot.val().repeat_key === repeatKey) {
+            //       childSnapshot.ref.remove();
+            //       console.log("found match");
+            //     }
+            //   });
+              snapshot.ref.remove();
+              console.log('remove actions');
+              
+            });
+            this.async(function() {
+              console.log('turn off listener');
+              this.db.ref('/actions').off('child_added', update);
+              this.calculateActions(data.detail, updateActionKey);
+              console.log("updateActions: ", data.detail);
+              this.updateSave = "ADD";
+              this.disableForm = true;
+              this.$.repeatForm.cancelRepeat();
+          },1000);
+            
+              // this.db.ref('/actions').on();
+          },
+
+          // setActions: function(every, repeat, repeat_key){} {
+          //   console.log("saveActions", repeat);
+          //   let due_date = repeat.start_on;
+          //   for(let i = 0; i < repeat.after_occurrences; i++) {
+          //     if (i > 0) {
+          //       due_date = moment(due_date).add(every, repeat.repeat_frequence);
+          //   }
+          //     this.db.ref('/actions').orderByChild("repeat_key").equalTo(repeat_key).set({
+          //       repeat_key: repeat_key,
+          //       title: repeat.title,
+          //       due_date: moment(due_date).format("YYYY-MM-DD")
+          //     });
+          //   console.log("test save actions");
+          //   }
+          //   this.disableForm = true;
+          //   this.updateSave = 'ADD';
+          // }
+
+      });
+  </script>
+</dom-module>
