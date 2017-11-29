@@ -357,37 +357,28 @@
             repeat_frequence: data.detail.repeat_frequence,
             start_on: data.detail.start_on,
             title: data.detail.title
-            }).then(this.updateActions(data));
-          },
-
-          updateActions: function(data) {
-            console.log('update actions');
-            let updateActionKey = data.detail.$key || '';
-            let update = this.db.ref('/actions').orderByChild("repeat_key").equalTo(updateActionKey).on('child_added', function(snapshot) {
-            // let update = this.db.ref('/actions').once('value', function(snapshot) {
-            //   snapshot.forEach(function(childSnapshot) { 
-            //     console.log(childSnapshot.val());
-            //     if(childSnapshot.val().repeat_key === repeatKey) {
-            //       childSnapshot.ref.remove();
-            //       console.log("found match");
-            //     }
-            //   });
-              snapshot.ref.remove();
-              console.log('remove actions');
-              
-            });
-            this.async(function() {
-              console.log('turn off listener');
-              this.db.ref('/actions').off('child_added', update);
-              this.calculateActions(data.detail, updateActionKey);
-              console.log("updateActions: ", data.detail);
-              this.updateSave = "ADD";
-              this.disableForm = true;
-              this.$.repeatForm.cancelRepeat();
-          },1000);
-            
+          }).then(this.updateActions(data));
               // this.db.ref('/actions').on();
-          },
+        },
+
+        updateActions: function(data) {
+          console.log('update actions');
+          let updateActionKey = data.detail.$key || '';
+          let update = this.db.ref('/actions').orderByChild("repeat_key").equalTo(updateActionKey).on('child_added', function(snapshot) {
+            snapshot.ref.remove();
+            console.log('remove actions');             
+          });
+          this.async(function() {
+            console.log('turn off listener');
+            this.db.ref('/actions').off('child_added', update);
+            this.calculateActions(data.detail, updateActionKey);
+            console.log("updateActions: ", data.detail);
+            this.updateSave = "ADD";
+            this.disableForm = true;
+            this.$.repeatForm.cancelRepeat();
+            console.log('repeatsData',this.repeatsData);
+          },1000);
+        },
 
           // setActions: function(every, repeat, repeat_key){} {
           //   console.log("saveActions", repeat);
