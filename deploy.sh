@@ -1,5 +1,5 @@
 clear
-echo Deploy to GitHub Pages
+echo Deploy proplanr-repeat to GitHub Pages
 cd ..
 mkdir pub 
 cd pub
